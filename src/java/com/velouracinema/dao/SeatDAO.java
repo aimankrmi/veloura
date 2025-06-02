@@ -1,0 +1,184 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package com.velouracinema.dao;
+
+import com.velouracinema.model.Seat;
+import com.velouracinema.util.DBUtil;
+import java.util.List;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+/**
+ *
+ * @author Aiman
+ */
+public class SeatDAO {
+
+    private SeatDAO() {
+    }
+
+    public static Seat getSeatById(int seatId) {
+        String sql = "SELECT * FROM seats WHERE id = ?";
+        Seat seat = new Seat();
+        Connection conn = null;
+
+        try {
+            conn = DBUtil.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, seatId);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                seat.setSeatId(rs.getInt("id"));
+                seat.setShowtimeId(rs.getInt("showtime_id"));
+                seat.setSeatNumber(rs.getString("seat_number"));
+                seat.setIsAvailable(rs.getBoolean("is_available"));
+            }
+
+            conn.close();
+        } catch (SQLException e) {
+        }
+        return seat;
+    }
+
+    public static List<Seat> getSeatsByShowtimes(int showtimeId) {
+
+        List<Seat> seats = new ArrayList();
+        Connection conn = null;
+        String sql = "SELECT * FROM seats WHERE showtime_id = ? ORDER BY SUBSTRING(seat_number, 1, 1), CAST(SUBSTRING(seat_number, 2) AS UNSIGNED)";
+        try {
+            conn = DBUtil.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, showtimeId);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Seat seat = new Seat();
+                seat.setSeatNumber(rs.getString("seat_number"));
+                seat.setShowtimeId(rs.getInt("showtime_id"));
+                seat.setIsAvailable(rs.getBoolean("is_available"));
+                seats.add(seat);
+            }
+            conn.close();
+        } catch (SQLException e) {
+        } finally {
+            try {
+                if (conn != null && !conn.isClosed()) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                System.out.println("Error closing connection: " + e.getMessage());
+            }
+        }
+
+        return seats;
+
+    }
+
+//    public static List<Seat> getSeats(int showtimeId) {
+//
+//        List<Seat> seats = new ArrayList();
+//
+//        String sql = "SELECT * FROM seats WHERE showtime_id = ?";
+//
+//        try (Connection conn = DBUtil.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
+//            stmt.setInt(1, showtimeId);
+//            while (rs.next()) {
+//                Seat seat = new Seat();
+//                seat.setSeatId(rs.getInt("id"));
+//                seat.setSeatNumber(rs.getString("seat_number"));
+//                seat.setShowtimeId(rs.getInt(showtimeId));
+//                seat.setIsAvailable(rs.getBoolean("is_available"));
+//                seats.add(seat);
+//            }
+//            conn.close();
+//        } catch (SQLException e) {
+//        }
+//
+//        return seats;
+//
+//    }
+
+    public static boolean getStatusById(int seatId) {
+
+        String sql = "SELECT is_available FROM seats WHERE id = ?";
+        Connection conn = null;
+        boolean status = false;
+        try {
+            conn = DBUtil.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, seatId);
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                status = rs.getBoolean(1);
+            }
+
+            conn.close();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(SeatDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return status;
+    }
+
+    public static void changeStatusById(int seatId) {
+
+        int st = 0;
+        String sql;
+        boolean status = getStatusById(seatId);
+
+        Connection conn = null;
+
+        try {
+            if (status) {
+                sql = "UPDATE seats SET is_available = FALSE WHERE id = ?";
+            } else {
+                sql = "UPDATE seats SET is_available = TRUE WHERE id = ?";
+            }
+            conn = DBUtil.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, seatId);
+
+            st = stmt.executeUpdate();
+
+            conn.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(SeatDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
+    public static int getSeatId(int showtimeId, String seatNumber) {
+
+        int seatId = 0;
+        String sql = "SELECT id FROM seats WHERE showtime_id = ? AND seat_number= ?";
+        Connection conn = null;
+
+        try {
+            conn = DBUtil.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, showtimeId);
+            stmt.setString(2, seatNumber);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                seatId = rs.getInt("id");
+            }
+
+            conn.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(SeatDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return seatId;
+    }
+    
+    
+
+}
