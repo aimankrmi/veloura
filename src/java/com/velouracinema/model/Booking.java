@@ -4,7 +4,7 @@
  */
 package com.velouracinema.model;
 
-import com.velouracinema.dao.ShowtimeDAO;
+import com.velouracinema.dao.booking.ShowtimeDAO;
 import java.util.Date;
 import java.util.List;
 

@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.velouracinema.dao;
+package com.velouracinema.dao.booking;
 
 import com.velouracinema.model.Seat;
 import com.velouracinema.util.DBUtil;
@@ -103,7 +103,6 @@ public class SeatDAO {
 //        return seats;
 //
 //    }
-
     public static boolean getStatusById(int seatId) {
 
         String sql = "SELECT is_available FROM seats WHERE id = ?";
@@ -178,7 +177,44 @@ public class SeatDAO {
         }
         return seatId;
     }
-    
-    
 
+    public static void generateSeatForEachShowtime(int showtimeId, String screen) {
+
+        String sql = "INSERT INTO seats (showtime_id, seat_number) VALUES (?, ?)";
+        char lastRow = 'A';
+        int numOfSeatPerRow = 9;
+        if ("Hall A".equalsIgnoreCase(screen)) {
+            lastRow = 'E';
+        } else if ("Hall B".equalsIgnoreCase(screen)) {
+            lastRow = 'F';
+        } else if ("Hall C".equalsIgnoreCase(screen)) {
+            lastRow = 'G';
+        } else if ("Hall D".equalsIgnoreCase(screen)) {
+            lastRow = 'H';
+        }
+
+        try (Connection conn = DBUtil.getConnection();PreparedStatement stmt = conn.prepareStatement(sql);) {
+
+            conn.setAutoCommit(false);
+
+            for (char alpha = 'A'; alpha <= lastRow; alpha++) {
+                //  For each row
+                for (int i = 1; i <= numOfSeatPerRow; i++) {
+                    stmt.setInt(1, showtimeId);
+                    stmt.setString(2, String.valueOf(alpha) + i);
+
+                    stmt.addBatch();
+                }
+
+            }
+
+            stmt.executeBatch();
+            conn.commit();
+            System.out.println("Generate seat for showtime ID " + showtimeId + " is successful.");
+
+        } catch (SQLException ex) {
+            Logger.getLogger(SeatDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
 }

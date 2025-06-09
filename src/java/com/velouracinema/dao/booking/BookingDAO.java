@@ -2,9 +2,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.velouracinema.dao;
+package com.velouracinema.dao.booking;
 
+import com.velouracinema.dao.payment.PaymentDAO;
 import com.velouracinema.model.Booking;
+import com.velouracinema.model.Payment;
 import com.velouracinema.model.Seat;
 import com.velouracinema.util.DBUtil;
 import java.sql.*;
@@ -18,6 +20,45 @@ import java.util.logging.Logger;
  * @author Aiman
  */
 public class BookingDAO {
+
+    public static List<Booking> getAllBookings() {
+
+        List<Booking> bookings = new ArrayList<>();
+
+        String sql = "SELECT "
+                + "b.id AS booking_id,"
+                + "b.showtime_id AS showtime_id,"
+                + "u.id AS member_id,"
+                + "b.booking_date as booking_date,"
+                + "b.status AS booking_status,"
+                + "p.payment_method AS payment_method,"
+                + "p.amount AS payment_amount,"
+                + "p.status AS payment_status"
+                + " FROM ((bookings b INNER JOIN payments p ON b.id = p.booking_id) INNER JOIN users u ON b.member_id = u.id) WHERE b.status = 'confirmed';";
+        try (Connection conn = DBUtil.getConnection(); Statement stmt = conn.createStatement();) {
+            ResultSet rs = stmt.executeQuery(sql);
+
+            while (rs.next()) {
+                Booking booking = new Booking();
+                Payment payment = new Payment();
+                booking.setId(rs.getInt("booking_id"));
+                booking.setShowtimeId(rs.getInt("showtime_id"));
+                booking.setMemberId(rs.getInt("member_id"));
+                booking.setBookingDate(rs.getDate("booking_date"));
+                booking.setStatus(rs.getString("booking_status"));
+
+                payment.setPaymentMethod(rs.getString("payment_method"));
+                payment.setStatus(rs.getString("payment_status"));
+                payment.setAmount(rs.getDouble("payment_amount"));
+
+                booking.setPayment(payment);
+
+                bookings.add(booking);
+            }
+        } catch (SQLException ex) {
+        }
+        return bookings;
+    }
 
     public static Booking getBookingById(int bookingId, int memberId) {
         String sql = "SELECT * FROM bookings WHERE id = ? AND member_id = ?";
@@ -45,8 +86,6 @@ public class BookingDAO {
                 seats.add(SeatDAO.getSeatById(seatId));
             }
             booking.setSeats(seats);
-            System.out.println("STATUS");
-            System.out.println(booking.getPayment().getStatus());
             conn.close();
         } catch (SQLException ex) {
             Logger.getLogger(BookingDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -135,6 +174,7 @@ public class BookingDAO {
         }
         return status;
     }
+
     // To remove booked seat (edit booking)
     public static int removeBookedSeat(int bookingId, int seatId) {
         String sql = "DELETE FROM booking_seats WHERE booking_id = ? AND seat_id ?";
@@ -155,8 +195,6 @@ public class BookingDAO {
         }
         return status;
     }
-    
-    
 
     public static List<Integer> getBookedSeatByBooking(int bookingId) {
         String sql = "SELECT seat_id FROM booking_seats WHERE booking_id = ?";
@@ -205,9 +243,9 @@ public class BookingDAO {
     }
 
     // To list the booking history
-    public static Booking getBookingByMemberId(int memberId) {
+    public static List<Booking> getBookingByMemberId(int memberId) {
         String sql = "SELECT * FROM bookings WHERE member_id = ?";
-        Booking booking = new Booking();
+        List<Booking> bookings = new ArrayList<>();
 
         Connection conn = null;
 
@@ -218,17 +256,27 @@ public class BookingDAO {
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
+                Booking booking = new Booking();
                 booking.setId(rs.getInt("id"));
                 booking.setMemberId(rs.getInt("member_id"));
                 booking.setShowtimeId(rs.getInt("showtime_id"));
                 booking.setStatus(rs.getString("status"));
-                booking.setBookingDate(rs.getDate("bookingDate"));
+                booking.setBookingDate(rs.getDate("booking_date"));
+
+                booking.setPayment(PaymentDAO.getPaymentByBookingId(rs.getInt("id")));
+                List<Seat> seats = new ArrayList<>();
+                for (Integer seatId : BookingDAO.getBookedSeatByBooking(rs.getInt("id"))) {
+                    seats.add(SeatDAO.getSeatById(seatId));
+                }
+                booking.setSeats(seats);
+
+                bookings.add(booking);
             }
             conn.close();
         } catch (SQLException ex) {
             Logger.getLogger(BookingDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return booking;
+        return bookings;
     }
 
     public static int removeBookedSeatsByBookingId(int bookingId) {
@@ -250,7 +298,5 @@ public class BookingDAO {
         return status;
 
     }
-    
-
 
 }

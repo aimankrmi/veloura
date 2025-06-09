@@ -3,16 +3,16 @@
     Author     : sitif
 */
 body {
-    background-color: #000;
-    color: #fff;
-    font-family: 'Poppins', sans-serif;
+    /*background-color: #000;*/
+    /*color: #fff;*/
+    /*font-family: 'Poppins', sans-serif;*/
     margin: 0;
     padding: 0;
 }
 
-.homepage-container {
+/*.homepage-container {
     font-family: 'Raleway', sans-serif;
-}
+}*/
 
 .movie-header {
     display: flex;
@@ -25,7 +25,7 @@ body {
 .movie-header h1 {
     margin-right: 30px;
     font-size: 42px;
-    font-family: 'Playfair Display', serif;
+    /*font-family: 'Playfair Display', serif;*/
 }
 
 .tabs {
@@ -93,6 +93,7 @@ body {
 
 .movie-card:hover .movie-info {
     opacity: 1;
+    color: var(--color-bright-gray);
 }
 
 .movie-info button {
@@ -120,8 +121,8 @@ body {
     margin: 0 60px 40px;
     border: 3px solid transparent;
     border-radius: 15px;
-    background: linear-gradient(#000, #000) padding-box,
-                linear-gradient(135deg, #fceabb, #f8d78d) border-box;
+/*    background: linear-gradient(#000, #000) padding-box,
+                linear-gradient(135deg, #fceabb, #f8d78d) border-box;*/
     box-shadow: 0 0 15px rgba(255, 235, 133, 0.7), 0 0 30px rgba(255, 235, 133, 0.4);
     overflow: hidden;
 }
@@ -169,8 +170,8 @@ body {
     position: relative;
     padding: 30px 40px;
     border-radius: 12px;
-    background: linear-gradient(#111, #111) padding-box,
-                linear-gradient(120deg, #ff6b81, #f368e0) border-box;
+/*    background: linear-gradient(#111, #111) padding-box,
+                linear-gradient(120deg, #ff6b81, #f368e0) border-box;*/
     border: 3px solid transparent;
     box-shadow: 0 0 20px #ff6b81, 0 0 30px #f368e0;
     animation: fadeInUp 0.8s ease-out;

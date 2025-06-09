@@ -4,9 +4,9 @@
  */
 package com.velouracinema.controller.payment;
 
-import com.velouracinema.dao.BookingDAO;
-import com.velouracinema.dao.PaymentDAO;
-import com.velouracinema.dao.ShowtimeDAO;
+import com.velouracinema.dao.booking.BookingDAO;
+import com.velouracinema.dao.payment.PaymentDAO;
+import com.velouracinema.dao.booking.ShowtimeDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
@@ -87,7 +87,7 @@ public class PaymentProcessServlet extends HttpServlet {
                     status = BookingDAO.updateBookingStatus(bookingId);
                     System.out.println("UPDATE BOOKING");
                     if (status > 0) {
-                        request.getRequestDispatcher("views/success-payment.jsp").forward(request, response);
+                        request.getRequestDispatcher("views/payment/success-payment.jsp").forward(request, response);
                     } else {
                         response.sendRedirect("booking");
                     }
@@ -105,7 +105,7 @@ public class PaymentProcessServlet extends HttpServlet {
 
                 status = BookingDAO.updateBookingStatus(bookingId);
                 if (status > 0) {
-                    request.getRequestDispatcher("views/success-payment.jsp").forward(request, response);
+                    request.getRequestDispatcher("views/payment/success-payment.jsp").forward(request, response);
 
                 }
             }

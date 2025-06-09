@@ -29,7 +29,7 @@
         <h1 class="glow-gold mt-3 display-4" style="text-align: left; padding-left: 2.5rem;">Showtimes</h1>
         <div class="container py-4 homepage-container">
 
-       
+
             <!-- Now Showing Custom Scroll Carousel -->
             <h3 class="glow-gold mb-3">Now Showing</h3><br>
 
@@ -46,7 +46,7 @@
                                     Language: ${movie.language}<br>
                                     Subtitle: ENG, MALAY
                                 </div>
-                                    <a class="btn btn-primary" href="${pageContext.request.contextPath}/booking?id=${movie.movieId}">Buy Now</a>
+                                <a class="btn btn-primary" href="${pageContext.request.contextPath}/booking?id=${movie.movieId}">Buy Now</a>
                             </div>
                         </div>
                     </c:forEach>
@@ -56,55 +56,53 @@
             <button class="arrow left" onclick="scrollMovies(-1)">&#9664;</button>
             <button class="arrow right" onclick="scrollMovies(1)">&#9654;</button>
         </div>
-    </div>
 
 
-    <!-- Top 5 Ranking Section -->
-    <!-- Top 10 Ranking Section -->
-    <section class="top-movies-section container mb-5">
-        <h2 class="glow-gold mb-4">Top 10 Movies</h2>
-        <div class="top10-grid">
-            <div class="movie-rank"><span class="rank">1</span> Blood Brothers: Bara Naga <span class="badge now">Now Showing</span></div>
-            <div class="movie-rank"><span class="rank">6</span> Avatar: The Way of Water <span class="badge now">Now Showing</span></div>
+        <!-- Top 5 Ranking Section -->
+        <!-- Top 10 Ranking Section -->
+        <section class="top-movies-section container mb-5">
+            <h2 class="glow-gold mb-4">Top 10 Movies</h2>
+            <div class="top10-grid">
+                <div class="movie-rank"><span class="rank">1</span> Blood Brothers: Bara Naga <span class="badge now">Now Showing</span></div>
+                <div class="movie-rank"><span class="rank">6</span> Avatar: The Way of Water <span class="badge now">Now Showing</span></div>
 
-            <div class="movie-rank"><span class="rank">2</span> Final Destination Bloodlines <span class="badge coming">Coming Soon</span></div>
-            <div class="movie-rank"><span class="rank">7</span> Howl's Moving Castle <span class="badge coming">Coming Soon</span></div>
+                <div class="movie-rank"><span class="rank">2</span> Final Destination Bloodlines <span class="badge coming">Coming Soon</span></div>
+                <div class="movie-rank"><span class="rank">7</span> Howl's Moving Castle <span class="badge coming">Coming Soon</span></div>
 
-            <div class="movie-rank"><span class="rank">3</span> Barbie <span class="badge now">Now Showing</span></div>
-            <div class="movie-rank"><span class="rank">8</span> Oppenheimer <span class="badge now">Now Showing</span></div>
+                <div class="movie-rank"><span class="rank">3</span> Barbie <span class="badge now">Now Showing</span></div>
+                <div class="movie-rank"><span class="rank">8</span> Oppenheimer <span class="badge now">Now Showing</span></div>
 
-            <div class="movie-rank"><span class="rank">4</span> Spider-Man: Across the Spider-Verse <span class="badge now">Now Showing</span></div>
-            <div class="movie-rank"><span class="rank">9</span> Puss in Boots: The Last Wish <span class="badge coming">Coming Soon</span></div>
+                <div class="movie-rank"><span class="rank">4</span> Spider-Man: Across the Spider-Verse <span class="badge now">Now Showing</span></div>
+                <div class="movie-rank"><span class="rank">9</span> Puss in Boots: The Last Wish <span class="badge coming">Coming Soon</span></div>
 
-            <div class="movie-rank"><span class="rank">5</span> Wonka <span class="badge coming">Coming Soon</span></div>
-            <div class="movie-rank"><span class="rank">10</span> Hunger Games: The Ballad of Songbirds & Snakes <span class="badge now">Now Showing</span></div>
-        </div>
-    </section>
-
-
-</div>
-
-<jsp:include page="includes/footer.jsp" flush="true"/>
-<script>
-    function scrollMovies(direction) {
-        const container = document.querySelector('.movie-scroll-wrapper');
-        const scrollAmount = container.querySelector('.movie-card').offsetWidth + 20;
-        container.scrollBy({
-            left: direction * scrollAmount,
-            behavior: 'smooth'
-        });
-    }
-
-    document.addEventListener("DOMContentLoaded", function () {
-        document.querySelectorAll('.star-rating').forEach(star => {
-            const rating = parseFloat(star.getAttribute('data-rating'));
-            const percent = (Math.min(rating, 5) / 5) * 100;
-            star.style.setProperty('--percent', `${percent}%`);
-        });
-    });
-</script>
+                <div class="movie-rank"><span class="rank">5</span> Wonka <span class="badge coming">Coming Soon</span></div>
+                <div class="movie-rank"><span class="rank">10</span> Hunger Games: The Ballad of Songbirds & Snakes <span class="badge now">Now Showing</span></div>
+            </div>
+        </section>
 
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
-</body>
+
+        <jsp:include page="includes/footer.jsp" flush="true"/>
+        <script>
+            function scrollMovies(direction) {
+                const container = document.querySelector('.movie-scroll-wrapper');
+                const scrollAmount = container.querySelector('.movie-card').offsetWidth + 20;
+                container.scrollBy({
+                    left: direction * scrollAmount,
+                    behavior: 'smooth'
+                });
+            }
+
+            document.addEventListener("DOMContentLoaded", function () {
+                document.querySelectorAll('.star-rating').forEach(star => {
+                    const rating = parseFloat(star.getAttribute('data-rating'));
+                    const percent = (Math.min(rating, 5) / 5) * 100;
+                    star.style.setProperty('--percent', `${percent}%`);
+                });
+            });
+        </script>
+
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
+    </body>
 </html>

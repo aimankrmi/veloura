@@ -28,11 +28,10 @@
         <jsp:setProperty name="movieShowtime" property="showDate" value="${param.date}"/>
         <jsp:setProperty name="movieShowtime" property="showTime" value="${param.time}"/>
 
-        <jsp:include page="../includes/header.jsp"  flush="true"/>
-
+        <jsp:include page="../../includes/header.jsp"  flush="true"/>
 
         <!--Form to book-->
-        <form action="payment" method="POST">
+        <form action="${pageContext.request.contextPath}/${user.id==0 ? "login":"payment" }" id="bookingForm" method="POST">
             <input type="hidden" name="bookingToken" value="${bookingToken}" />
             <input type="hidden" name="bookingTokenTime" value="${bookingTokenTime}" />
             <div class="fluid-container pt-3">
@@ -41,7 +40,7 @@
                     <section class="w-100 mt-3 mx-auto px-0 movie-picture-section d-flex align-items-center justify-content-center">
                         <a href="booking?id=${movie.previousMovieId}" class="btn bg-transparent border-none btn-left"><i class="fa-solid fa-chevron-left fa-lg" style="color: #d9a93f;"></i></a>
                         <div class=" movie-picture-wrapper  overflow-hidden ">
-                            <img src="assets/images/${movie.imagePath!=null? movie.imagePath:'default'}" class="img-fluid movie-img" alt="Movie Image">
+                            <img src="${pageContext.request.contextPath}/assets/images/${movie.imagePath!=null? movie.imagePath:'default'}" class="img-fluid movie-img" alt="Movie Image">
                         </div>
                         <a href="booking?id=${movie.nextMovieId}" class="btn bg-transparent btn-right"><i class="fa-solid fa-chevron-right fa-lg" style="color: #d9a93f;"></i></a>
                     </section>
@@ -70,15 +69,19 @@
                             <!-- MOVIE DATE -->
                             <section class="showtimes-wrapper d-flex flex-column justify-content-center align-items-center mx-auto">
                                 <div class="showtimes-title">
-                                    <h1 class="glow-gold mt-3 fs-1 " >Available Date</h1>
+                                    <h1 class="glow-gold mt-3 fs-1 " >Available Date </h1>
                                 </div>
                                 <div class="showtimes-list mt-1 gap-2 d-flex flex-sm-row flex-column">
-
-                                    <c:forEach items="${movieShowtime.showDates}" var="showtimeDate" varStatus="status">
-                                        <fmt:parseDate value="${showtimeDate}" type="both" var="parsedDate" pattern="yyyy-MM-dd"/>
-                                        <input onchange="checkDate()" type="radio" class="btn-check date-input" name="date" id="showtime_date_${status.index + 1}" value="${showtimeDate}" data-date="${showtimeDate}" autocomplete="off">
-                                        <label class="btn btn-secondary showtimes-item date-label" for="showtime_date_${status.index + 1}"><fmt:formatDate value="${parsedDate}" pattern="dd MMMM yyyy (EEEE)"/></label>
-                                    </c:forEach>
+                                    <c:if test="${movie.status eq 'Coming Soon'}">
+                                        <p>COMING SOON</p>
+                                    </c:if>
+                                    <c:if test="${movie.status eq 'Ongoing'}">
+                                        <c:forEach items="${movie.availableDates}" var="availableDate" varStatus="status">
+                                            <fmt:parseDate value="${availableDate}" type="both" var="parsedDate" pattern="yyyy-MM-dd"/>
+                                            <input onchange="checkDate()" type="radio" class="btn-check date-input" name="date" id="showtime_date_${status.index + 1}" value="${availableDate}" data-date="${availableDate}" autocomplete="off">
+                                            <label class="btn btn-secondary showtimes-item date-label" for="showtime_date_${status.index + 1}"><fmt:formatDate value="${parsedDate}" pattern="dd MMMM yyyy (EEEE)"/></label>
+                                        </c:forEach>
+                                    </c:if>
 
                                 </div>
                             </section>
@@ -90,31 +93,32 @@
                                     </div>
                                     <div class="showtimes-list mt-1 gap-2 d-flex flex-sm-row flex-column">
 
-                                        <c:forEach items="${movieShowtime.showTimes}" var="time" varStatus="status">
+                                        <c:forEach items="${movieShowtime.showTimesByDate}" var="time" varStatus="status">
 
                                             <fmt:parseDate value="${time}" type="time" var="parsedTime" pattern="HH:mm:ss"/>
-                                            <input onclick="checkTime()" type="radio" class="btn-check time-input" name="time" id="showtime_time_${status.index+1}" value="${time}" autocomplete="off" data-time="${time}">
-                                            <label class="btn btn-secondary showtimes-item time-label" for="showtime_time_${status.index+1}" <c:if test="${param.time==time}">
-                                                   disabled checked
-                                                </c:if>><fmt:formatDate value="${parsedTime}" pattern="h:mm a"/></label>
+                                            <input onclick="checkTime()" type="radio" class="btn-check time-input" name="time" id="showtime_time_${status.index+1}" value="${time}" autocomplete="off" data-time="${time}" >
+                                            <label class="btn btn-secondary showtimes-item time-label" for="showtime_time_${status.index+1}" ><fmt:formatDate value="${parsedTime}" pattern="h:mm a"/></label>
+
                                         </c:forEach>
-                                        <c:if test="${param.time!=null && param.date!=null}">
-                                            <input type="hidden" id="time" name="time-show"value="${param.time}">
-                                            <input type="hidden" id="date" name="date-show"value="${param.date}">
-                                        </c:if>
                                     </div>
                                 </section>
 
                             </c:if>
                         </div>
                         <c:if test="${param.date!=null && param.time!=null}">
-                            <jsp:include page="../includes/seat-legend.jsp" flush="true"/>
+
+                            <jsp:include page="../../includes/seat-legend.jsp" flush="true" />
+                            <input type="hidden" id="time" name="time-show" value="${param.time}">
+                            <input type="hidden" id="date" name="date-show" value="${param.date}">
 
                         </c:if>
 
 
                     </section>
-                    <c:if test="${param.date!=null && param.time!=null}">
+                    <c:if test="${param.date!=null && param.time!=null && !movieShowtime.upcoming}">
+                        <p class="text-center glow-white fs-4 mt-4">NOT AVAILABLE</p>
+                    </c:if>
+                    <c:if test="${param.date!=null && param.time!=null && movieShowtime.upcoming}">
                         <input type="hidden" name="showtime-id" value="${movieShowtime.id}">
                         <!-- SEAT SELECTION -->
                         <section class="seat-selection-section w-100 mt-4 px-5 ">
@@ -124,17 +128,24 @@
                             <div class="screen mx-auto my-4 pt-4 text-center">Screen</div>
                             <!--<div class="seat-selection-wrapper pb-2 row mx-auto overflow-auto row seat-row mx-4 flex-nowrap">-->
                             <!--<div class="seat-selection-wrapper pb-2 fluid-container mx-auto overflow-auto">-->
-                            <div class="seat-selection-wrapper pb-2 fluid-container mx-auto overflow-auto">   
+                            <div class="seat-selection-wrapper scrollbar-gold pb-2 fluid-container mx-auto overflow-auto">   
                                 <c:forEach items="${movieShowtime.seatRowByShowtime}" var="row">
                                     <c:set var="seatRow" value="${row.key}"/>
                                     <div class="row seat-row mx-4 flex-nowrap" data-seat="${seatRow}">
+                                        <c:if test="${user.id==0}">
+                                            <input type="hidden" name="movieId" value="${movie.movieId}">
+                                            <input type="hidden" name="urlRedirect" value="true">
+                                        </c:if>
+
                                         <c:forEach items="${row.value}" var="seat" varStatus="status">
                                             <c:set var="seatNumber" value="${seat.seatNumber}" />
 
                                             <div class="col-1">
-                                                <input type="checkbox" class="btn-check"
+                                                <input type="checkbox" class="btn-check" onchange='${user.id==0 ? 'document.getElementById("bookingForm").submit(); '
+                                                                                                     :"addSeat(this.id)"}'
+
                                                        name="seat" value="${seatNumber}" id="${seatNumber}"
-                                                       onchange="addSeat(this.id)" data-price="${movieShowtime.movie.price}"
+                                                       data-price="${movieShowtime.movie.price}"
                                                        ${seat.isAvailable ? "" : "disabled"} />
                                                 <label class="btn seat-icon ${seat.isAvailable ? 'available' : 'reserved'}"
                                                        for="${seatNumber}">${seatNumber}</label> 
@@ -201,7 +212,7 @@
                 </div>
             </div>
         </form>
-        <jsp:include page="../includes/footer.jsp" flush="true"/>
+        <jsp:include page="../../includes/footer.jsp" flush="true"/>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>

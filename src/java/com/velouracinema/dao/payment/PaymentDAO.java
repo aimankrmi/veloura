@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.velouracinema.dao;
+package com.velouracinema.dao.payment;
 
 import com.velouracinema.model.Payment;
 import com.velouracinema.util.DBUtil;
@@ -11,6 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,6 +21,8 @@ import java.util.logging.Logger;
  */
 public class PaymentDAO {
 
+    
+    
     public static Payment getPaymentByBookingId(int bookingId){
         String sql = "SELECT * FROM payments WHERE booking_id = ?";
         Connection conn = null;
@@ -118,5 +121,29 @@ public class PaymentDAO {
 
         return status;
     }
+    
+    public static int updatePaymentStatus(int bookingID, String paymentStatus) {
+        String sql = "UPDATE payments SET status = ? WHERE booking_id = ?";
+        int status = 0;
+
+        Connection conn = null;
+        try {
+
+            conn = DBUtil.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, paymentStatus);
+            stmt.setInt(2, bookingID);
+
+            status = stmt.executeUpdate();
+            
+            conn.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(PaymentDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return status;
+    }
+    
+    
 
 }

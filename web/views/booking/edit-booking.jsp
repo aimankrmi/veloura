@@ -29,9 +29,11 @@
     <fmt:parseDate value="${booking.showtime.showDate}" type="both" var="parsedDate" pattern="yyyy-MM-dd"/>
     <fmt:parseDate value="${booking.showtime.showTime}" type="time" var="parsedTime" pattern="HH:mm:ss"/>
 
-    <jsp:include page="../includes/header.jsp" />
+    <jsp:include page="../../includes/header.jsp" />
     <div class="fluid-container">
         <div class="row justify-content-center py-3">
+            <a href="${pageContext.request.contextPath}/viewBookingHistory" class="ms-3"><i class="fa-solid fa-circle-chevron-left fa-xl me-2" style="color: var(--color-light-gold);"></i></a>
+
             <h2 class=" text-center mx-auto booking-title"><span class="glow-gold display-4">BOOKING
                     DETAILS</span></h2>
         </div>
@@ -87,21 +89,19 @@
         </div>
     </div>
 
-    <form action="processEditBooking"> 
+    <form action="${pageContext.request.contextPath}/processEditBooking" method="POST"> 
         <input type="hidden" name="showtime-id" value="${booking.showtimeId}">
-            <c:forEach items="${booking.seats}" var="seat">
-                <input type="hidden" name="booked-seat" value="${seat.seatId}">
-            </c:forEach>
-                <input type="hidden" name="payment-status" value="${booking.payment.status}">
-                <input type="hidden" name="booking-id" value="${booking.id}">
+        <c:forEach items="${booking.seats}" var="seat">
+            <input type="hidden" name="booked-seat" value="${seat.seatId}">
+        </c:forEach>
+        <input type="hidden" name="payment-status" value="${booking.payment.status}">
+        <input type="hidden" name="booking-id" value="${booking.id}">
         <!-- SEAT SELECTION -->
         <section class="seat-selection-section w-100 mt-4 px-5 ">
             <div class="seat-selection-title">
                 <h1 class="glow-gold mt-3 fs-1 text-center">Select Your Seats</h1>
             </div>
             <div class="screen mx-auto my-4 pt-4 text-center">Screen</div>
-            <!--<div class="seat-selection-wrapper pb-2 row mx-auto overflow-auto row seat-row mx-4 flex-nowrap">-->
-            <!--<div class="seat-selection-wrapper pb-2 fluid-container mx-auto overflow-auto">-->
             <div class="seat-selection-wrapper pb-2 fluid-container mx-auto overflow-auto" data-seat-booked="${booking.seats.size()}">   
                 <c:forEach items="${booking.showtime.seatRowByShowtime}" var="row">
                     <c:set var="seatRow" value="${row.key}"/>
@@ -150,7 +150,7 @@
 
 
 
-            
+
 
             <!-- Modal -->
             <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
@@ -191,7 +191,7 @@
     </form>
 
 
-    <jsp:include page="../includes/footer.jsp" />
+    <jsp:include page="../../includes/footer.jsp" />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

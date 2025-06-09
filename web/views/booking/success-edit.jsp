@@ -27,7 +27,7 @@
     <body>
         <c:set var="paymentMethod" value="${param.paymentMethod}"/>
         <c:set var="bookingId" value="${param.bookingId}"/>
-        <jsp:include page="../includes/header.jsp" />
+        <jsp:include page="../../includes/header.jsp" />
         <div class="container-fluid justify-content-center align-items-center py-4">
             <p class="display-3 glow-white" style="font-size:24px;">Edit Booking Completed</p>
             <p class="text-center">You will be redirected in 5 seconds... If you are not redirected, <a href="index.jsp" class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover">click here</a></p>
@@ -38,6 +38,6 @@
             }, 5000); // 5000 milliseconds = 5 seconds
         </script>
 
-        <jsp:include page="../includes/footer.jsp" />
+        <jsp:include page="../../includes/footer.jsp" />
     </body>
 </html>

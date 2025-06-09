@@ -4,7 +4,7 @@
  */
 package com.velouracinema.controller.movie;
 
-import com.velouracinema.dao.MovieDAO;
+import com.velouracinema.dao.movie.MovieDAO;
 import com.velouracinema.model.Movie;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -80,7 +80,7 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
     } else { // Default to Homepage
         List<Movie> movieList = MovieDAO.getAllMovies();
         request.setAttribute("movies", movieList);
-        request.getRequestDispatcher("homepage.jsp").forward(request, response);
+        request.getRequestDispatcher("index.jsp").forward(request, response);
     }
 }
 

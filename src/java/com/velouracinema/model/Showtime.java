@@ -4,10 +4,14 @@
  */
 package com.velouracinema.model;
 
-import com.velouracinema.dao.SeatDAO;
-import static com.velouracinema.dao.SeatDAO.getSeatsByShowtimes;
-import com.velouracinema.dao.ShowtimeDAO;
+import com.velouracinema.dao.booking.SeatDAO;
+import static com.velouracinema.dao.booking.SeatDAO.getSeatsByShowtimes;
+import com.velouracinema.dao.booking.ShowtimeDAO;
 import com.velouracinema.util.Utils;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -121,7 +125,7 @@ public class Showtime implements java.io.Serializable {
     }
 
 //    This method return the time for a movie and a date
-    public List<String> getShowTimes() {
+    public List<String> getShowTimesByDate() {
         return ShowtimeDAO.getMovieTimeById(this.movie.getMovieId(), this.showDate);
     }
 
@@ -129,10 +133,26 @@ public class Showtime implements java.io.Serializable {
     public List<String> getFormattedShowTimes() {
         List<String> formattedShowTimes = new ArrayList();
 
-        for (String time : this.getShowTimes()) {
+        for (String time : this.getShowTimesByDate()) {
             formattedShowTimes.add(Utils.formatHours(time));
         }
         return formattedShowTimes;
+    }
+
+    public boolean isUpcoming() {
+        
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+
+        try {
+            LocalDate date = LocalDate.parse(showDate, dateFormatter);
+            LocalTime time = LocalTime.parse(showTime, timeFormatter);
+            LocalDateTime showDateTime = LocalDateTime.of(date, time);
+            
+            return showDateTime.isAfter(LocalDateTime.now());
+        } catch (Exception e) {
+            return false;
+        }
     }
 
 }

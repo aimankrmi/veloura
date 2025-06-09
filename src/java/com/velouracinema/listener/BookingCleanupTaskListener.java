@@ -36,7 +36,7 @@ public class BookingCleanupTaskListener implements ServletContextListener {
             @Override
             public void run() {
                 try (Connection conn = DBUtil.getConnection()) {
-                    String query = "SELECT b.id, b.booking_date, b.status, p.payment_method, s.show_date, s.show_time "
+                    String query = "SELECT b.id, b.booking_date, b.status, p.payment_method, p.status as payment_status, s.show_date, s.show_time "
                             + "FROM bookings b "
                             + "JOIN showtimes s ON b.showtime_id = s.id "
                             + "LEFT JOIN payments p ON b.id = p.booking_id "
@@ -47,6 +47,7 @@ public class BookingCleanupTaskListener implements ServletContextListener {
                     LocalDateTime now = LocalDateTime.now();
 
                     while (rs.next()) {
+                        String status = rs.getString("payment_status");
                         int bookingId = rs.getInt("id");
                         LocalDateTime bookingDate = rs.getTimestamp("booking_date").toLocalDateTime();
                         String paymentMethod = rs.getString("payment_method");
@@ -59,12 +60,17 @@ public class BookingCleanupTaskListener implements ServletContextListener {
 
                         // Expire booking if it's unpaid and 15 minutes have passed
                         if (expiredBy15Minutes) {
+                            System.out.println("SUDAH 15 MINIT BERLALU TANPA PILIH JENIS BAYARAN");
                             markBookingAsExpired(conn, bookingId);
                         } // If within 3 hours of showtime and payment method is counter or not chosen, expire it
-                        else if (within3HoursToShow && (paymentMethod == null || paymentMethod.equals("counter"))) {
+                        else if (within3HoursToShow && (paymentMethod == null || paymentMethod.equals("counter")) && status.equals("not_paid") ) {
+                            System.out.println("BAYAR DI KAUNTER DAN SUDAH KURANG 3 JAM.");
                             markBookingAsExpired(conn, bookingId);
                         }
                     }
+                    
+                    conn.close();
+                    
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

@@ -2,21 +2,26 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.velouracinema.dao;
+package com.velouracinema.dao.booking;
 
-import static com.velouracinema.dao.MovieDAO.getMovieById;
+import com.velouracinema.dao.movie.MovieDAO;
+import static com.velouracinema.dao.movie.MovieDAO.getMovieById;
+import com.velouracinema.dao.payment.PaymentDAO;
 import com.velouracinema.model.Showtime;
 import com.velouracinema.util.DBUtil;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -152,5 +157,49 @@ public class ShowtimeDAO {
 
         return null;
     }
+    
+    
+    // To generate a showtime with seat
+    public static int generateShowtime(int movieId, String showDate, String showTime, String screen){
+        
+        String sql = "INSERT INTO showtimes (movie_id, show_date, show_time, screen) VALUES (?, ?, ?, ?)";
+        Connection conn = null;
+        int showtimeId = -1;
+        
+        try {
+            conn = DBUtil.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            stmt.setInt(1, movieId);
+            stmt.setString(2, showDate);
+            stmt.setString(3, showTime);
+            stmt.setString(4, screen);
+
+            int affectedRows = stmt.executeUpdate();
+
+            if (affectedRows == 0) {
+                throw new SQLException("Inserting showtimes failed, no rows affected.");
+            }
+
+            // Get the generated showtimeId
+            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    showtimeId = generatedKeys.getInt(1); // Auto-incremented showtimeId
+                } else {
+                    throw new SQLException("Inserting payment failed, no ID obtained.");
+                }
+            }
+
+            conn.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(PaymentDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return showtimeId;
+    }
+        
+        
+        
+        
+        
 
 }

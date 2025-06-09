@@ -87,19 +87,11 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
 }
 
 /*Seat Selection*/
-.seat-selection-wrapper {
-  /*width: 80vw;*/
-  /*overflow-x: auto;*/
+/*.seat-selection-wrapper {
+  width: 80vw;
+  overflow-x: auto;
   scrollbar-color: var(--color-dark-gold) var(--color-black);
   scrollbar-width: thin;
-}
-
-/*.seat-selection-wrapper .seat-icon{
-    border: 1px solid var(--color-dark-gold) !important;
-    background: transparent;
-    padding: 15px 25px;
-    margin-right: 4px;
-    color: var(--color-bright-gray);
 }*/
 
 .seat-selection-wrapper .seat-icon {
@@ -118,19 +110,10 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
   color: var(--color-bright-gray);
 }
 
-/*.seat-selection-wrapper .btn-check:checked + .seat-icon {
-
-    background-color: var(--color-light-gold);
-    color: var(--color-black)
-        background-image: url("../icon/available-single.svg");
-        transform: rotate(180deg);
-}*/
 .seat-selection-wrapper .seat-icon.selected {
   background-color: var(--color-light-gold) !important;
   color: var(--color-black);
   height: auto;
-  /*background-image: url("../icon/available-single.svg");*/
-  /*transform: rotate(180deg);*/
 }
 
 .seat-row::before {
@@ -156,10 +139,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
 }
 
 .seat-row .col-1 .btn-check {
-  /*    position: relative !important;
-        top:50% !important;
-        left:50% !important;
-        z-index: -99 !important;*/
   position: absolute;
   opacity: 0;
   width: 0;

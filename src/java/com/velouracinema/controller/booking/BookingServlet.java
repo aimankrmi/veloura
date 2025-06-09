@@ -4,11 +4,11 @@
  */
 package com.velouracinema.controller.booking;
 
-import com.velouracinema.dao.BookingDAO;
-import com.velouracinema.dao.MovieDAO;
-import com.velouracinema.dao.PaymentDAO;
-import com.velouracinema.dao.SeatDAO;
-import com.velouracinema.dao.ShowtimeDAO;
+import com.velouracinema.dao.booking.BookingDAO;
+import com.velouracinema.dao.movie.MovieDAO;
+import com.velouracinema.dao.payment.PaymentDAO;
+import com.velouracinema.dao.booking.SeatDAO;
+import com.velouracinema.dao.booking.ShowtimeDAO;
 import com.velouracinema.model.Booking;
 import com.velouracinema.model.Seat;
 import java.io.IOException;
@@ -60,6 +60,8 @@ public class BookingServlet extends HttpServlet {
     
         int id = 1;
         try {
+            
+            
             id = request.getParameter("id") != null ? Integer.parseInt(request.getParameter("id")) : 1;
 
             String bookingToken = UUID.randomUUID().toString();
@@ -68,8 +70,10 @@ public class BookingServlet extends HttpServlet {
             request.setAttribute("bookingToken", bookingToken);
             session.setAttribute("bookingTokenTime", System.currentTimeMillis());
             request.setAttribute("movie", MovieDAO.getMovieById(id));
-//       response.sendRedirect(request.getContextPath()+"/views/booking.jsp");
-            request.getRequestDispatcher("views/booking.jsp").forward(request, response);
+            
+            
+            //  response.sendRedirect(request.getContextPath()+"/views/booking.jsp");
+            request.getRequestDispatcher("views/booking/booking.jsp").forward(request, response);
 
         } catch (NumberFormatException e) {
             response.sendRedirect(request.getContextPath()+"/index.jsp");

@@ -3,8 +3,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
 
-import com.velouracinema.dao.MovieDAO;
-import com.velouracinema.dao.SeatDAO;
+import com.velouracinema.dao.movie.MovieDAO;
+import com.velouracinema.dao.booking.SeatDAO;
 import com.velouracinema.model.Movie;
 import com.velouracinema.model.Seat;
 import com.velouracinema.util.DBUtil;

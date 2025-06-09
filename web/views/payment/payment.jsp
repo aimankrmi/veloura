@@ -24,7 +24,7 @@
 
     </head>
     <body>
-        <jsp:include page="../includes/header.jsp" />
+        <jsp:include page="../../includes/header.jsp" />
         <jsp:useBean id="booking" class="com.velouracinema.model.Booking" scope="request"/>
         <jsp:useBean id="showtime" class="com.velouracinema.model.Showtime" scope="request"/>
         <fmt:parseDate value="${showtime.showDate}" type="both" var="parsedDate" pattern="yyyy-MM-dd"/>
@@ -170,81 +170,6 @@
 
 
 
-                                        <!--                                        <div class="fluid-container ">
-                                                                                    <div class="row d-flex justify-content-center ">
-                                                                                        <div class="col-11 ">
-                                                                                            <div class="card bg-dark text-white border-0">
-                                                                                                <div class="card-body p-4">
-                                                                                                    <input type="hidden" name="paymentMethod" value="online">
-                                                                                                    <input type="hidden" name="bookingId" value="${booking.id}">
-                                                                                                    <div
-                                                                                                        class="d-flex justify-content-between align-items-center mb-3">
-                                                                                                        <div data-mdb-input-init class="form-outline">
-                                                                                                            <input type="number" id="typeText"
-                                                                                                                   class="form-control form-control-lg"
-                                                                                                                   size="17" placeholder="1234 5678 9012 3457"
-                                                                                                                   minlength="16" maxlength="16" />
-                                                                                                            <label class="form-label" for="typeText">Card
-                                                                                                                Number</label>
-                                                                                                        </div>
-                                                                                                        <div class="d-flex align-items-center mb-4 px-2 gap-2"
-                                                                                                             style="height:100%;">
-                                                                                                            <i class="fa-brands fa-cc-visa fa-2xl"
-                                                                                                               style="color: #f7f7f7;"></i>
-                                                                                                            <i class="fa-brands fa-cc-mastercard fa-2xl"
-                                                                                                               style="color: #fafafa;"></i>
-                                                                                                        </div>
-                                                                                                    </div>
-                                        
-                                                                                                    <div
-                                                                                                        class="d-flex justify-content-between align-items-center mb-4">
-                                                                                                        <div data-mdb-input-init class="form-outline">
-                                                                                                            <input type="text" id="typeName"
-                                                                                                                   class="form-control form-control-lg"
-                                                                                                                   siez="17" placeholder="Cardholder's Name" autocomplete="false"/>
-                                                                                                            <label class="form-label"
-                                                                                                                   for="typeName">Cardholder's Name</label>
-                                                                                                        </div>
-                                                                                                    </div>
-                                        
-                                                                                                    <div
-                                                                                                        class="d-flex justify-content-start gap-3 align-items-center pb-2">
-                                                                                                        <div data-mdb-input-init class="form-outline">
-                                                                                                            <input type="text" id="typeExp"
-                                                                                                                   class="form-control form-control-lg"
-                                                                                                                   placeholder="MM/YYYY" size="9" id="exp"
-                                                                                                                   minlength="7" maxlength="7" autocomplete="false"/>
-                                                                                                            <label class="form-label"
-                                                                                                                   for="typeExp">Month</label>
-                                                                                                        </div>
-                                                                                                        <div data-mdb-input-init class="form-outline">
-                                                                                                            <input type="text" id="typeExp"
-                                                                                                                   class="form-control form-control-lg"
-                                                                                                                   placeholder="MM/YYYY" size="9" id="exp"
-                                                                                                                   minlength="7" maxlength="7" autocomplete="false"/>
-                                                                                                            <label class="form-label"
-                                                                                                                   for="typeExp">Year</label>
-                                                                                                        </div>
-                                                                                                        <div data-mdb-input-init class="form-outline">
-                                                                                                            <input type="password" id="typeText2"
-                                                                                                                   class="form-control form-control-lg"
-                                                                                                                   placeholder="&#9679;&#9679;&#9679;" size="4"
-                                                                                                                   minlength="3" maxlength="3" autocomplete="false" />
-                                                                                                            <label class="form-label"
-                                                                                                                   for="typeText2">Cvv</label>
-                                                                                                        </div>
-                                                                                                                                                                            <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-info btn-lg btn-rounded">
-                                                                                                                                                                            <i class="fas fa-arrow-right"></i>
-                                                                                                                                                                        </button>
-                                                                                                    </div>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>-->
-
-
-
 
 
 
@@ -252,12 +177,6 @@
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-danger"
                                                 data-bs-dismiss="modal">Cancel</button>
-                                        <!--<input class="btn btn-primary btn-rounded" class type="submit" value="Pay" data-mdb-button-init data-mdb-ripple-init>-->
-                                        <!--                                <button type="button" data-mdb-button-init data-mdb-ripple-init
-                                                                                >
-                                                                            Pay
-                                                                        </button>-->
-                                        <!--<button type="button" class="btn btn-primary">Understood</button>-->
                                     </div>
                                 </div>
                             </div>
@@ -302,7 +221,7 @@
                     });
                 });
             </script>
-        <jsp:include page="../includes/footer.jsp" />
+        <jsp:include page="../../includes/footer.jsp" />
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
     </body>

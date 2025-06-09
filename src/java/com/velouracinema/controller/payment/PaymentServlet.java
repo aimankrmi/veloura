@@ -4,15 +4,16 @@
  */
 package com.velouracinema.controller.payment;
 
-import com.velouracinema.dao.BookingDAO;
-import com.velouracinema.dao.MovieDAO;
-import com.velouracinema.dao.PaymentDAO;
-import com.velouracinema.dao.SeatDAO;
-import com.velouracinema.dao.ShowtimeDAO;
+import com.velouracinema.dao.booking.BookingDAO;
+import com.velouracinema.dao.movie.MovieDAO;
+import com.velouracinema.dao.payment.PaymentDAO;
+import com.velouracinema.dao.booking.SeatDAO;
+import com.velouracinema.dao.booking.ShowtimeDAO;
 import com.velouracinema.model.Booking;
 import com.velouracinema.model.Payment;
 import com.velouracinema.model.Seat;
 import com.velouracinema.model.Showtime;
+import com.velouracinema.model.User;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
@@ -57,7 +58,8 @@ public class PaymentServlet extends HttpServlet {
         }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the
+    // + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *
@@ -100,9 +102,36 @@ public class PaymentServlet extends HttpServlet {
             throws ServletException, IOException {
 
         int showtimeId;
+        HttpSession session = request.getSession();
+
+        String date = request.getParameter("date-show");
+        String time = request.getParameter("time-show");
+        request.setAttribute("date", date);
+        request.setAttribute("time", time);
+
+        User user = (User) session.getAttribute("user");
+
+        // Check if the user has logged in or not AND to check if the user is not a member (staff/admin) cannot book
+        if (user.getId() == 0 || !user.getRole().equalsIgnoreCase("member")) {
+            String message;
+            String uri = request.getRequestURI();
+            String query = request.getQueryString();
+            String redirectURL = uri + (query != null ? "?" + query : "");
+
+            // Store in session
+            request.getSession().setAttribute("redirectAfterLogin", redirectURL);
+
+            if (!user.getRole().equalsIgnoreCase("member")) {
+//                message = "You need to be a member to book ticket.";
+                response.sendRedirect(request.getContextPath() + "/logout");
+            } else {
+                message = "Please login first";
+                response.sendRedirect(request.getContextPath() + "/login?message=" + message);
+            }
+            return;
+        } 
 
         String formToken = request.getParameter("bookingToken");
-        HttpSession session = request.getSession();
 
         String sessionToken = (String) session.getAttribute("bookingToken");
         Long tokenTime = (Long) session.getAttribute("bookingTokenTime");
@@ -117,7 +146,7 @@ public class PaymentServlet extends HttpServlet {
         if (now - tokenTime > 15 * 60 * 1000) {
             session.removeAttribute("bookingToken");
             session.removeAttribute("bookingTokenTime");
-//                    response.sendRedirect("error.jsp?msg=TokenExpired");
+            // response.sendRedirect("error.jsp?msg=TokenExpired");
             response.sendError(409, "Duplicate or expired booking token.");
             return;
         }
@@ -129,25 +158,19 @@ public class PaymentServlet extends HttpServlet {
 
         List<Seat> seatsBooked = new ArrayList<>();
 
-        String date = request.getParameter("date-show");
-        String time = request.getParameter("time-show");
-        request.setAttribute("date", date);
-        request.setAttribute("time", time);
-
         double totalAmount = 0;
         int movieId = Integer.parseInt(request.getParameter("showtime-movie-id"));
 
-        int memberId = 5; //Just for temporary
+        int memberId = user.getId(); // Just for temporary
         showtimeId = Integer.parseInt(request.getParameter("showtime-id"));
         String[] seats = request.getParameterValues("seat");
         int seatId;
         int bookingId = BookingDAO.insertBooking(memberId, showtimeId); // Obtain booking ID while insert booking
-        System.out.println("CREATE BOOKING");
         // Store bookingId in session or pass as parameter to payment page
-//                session.setAttribute("currentBookingId", bookingId);
+        // session.setAttribute("currentBookingId", bookingId);
 
         // Invalidate token now - no more booking insertions allowed with this token
-//                session.removeAttribute("bookingToken");
+        // session.removeAttribute("bookingToken");
         Date bookingDate = BookingDAO.getBookingDateById(bookingId);
         for (String seat : seats) {
             seatId = SeatDAO.getSeatId(showtimeId, seat);
@@ -188,16 +211,17 @@ public class PaymentServlet extends HttpServlet {
         request.setAttribute("allowCounterPayment", allowCounterPayment);
 
         // Hantar dekat Payment
-//        request.setAttribute("movie_name", MovieDAO.getMovieById(movieId).getTitle());
+        // request.setAttribute("movie_name",
+        // MovieDAO.getMovieById(movieId).getTitle());
         request.setAttribute("showtime", showtime);
-//        request.setAttribute("payment", payment);
-//        request.setAttribute("total_amount", totalAmount);
-//        request.setAttribute("member_id", memberId);
-//        request.setAttribute("showtime_id", showtimeId);
-//        request.setAttribute("seat", seats);
+        // request.setAttribute("payment", payment);
+        // request.setAttribute("total_amount", totalAmount);
+        // request.setAttribute("member_id", memberId);
+        // request.setAttribute("showtime_id", showtimeId);
+        // request.setAttribute("seat", seats);
         request.setAttribute("booking", booking);
 
-        request.getRequestDispatcher("views/payment.jsp").forward(request, response);
+        request.getRequestDispatcher("views/payment/payment.jsp").forward(request, response);
 
     }
 
