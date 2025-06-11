@@ -15,8 +15,9 @@
         <!-- Bootstrap & Fonts -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-        <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;600&family=Vibur&display=swap" rel="stylesheet">
-
+        <link
+            href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&family=Vibur&display=swap"
+            rel="stylesheet">
         <!-- Custom Styles -->
         <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/styles.css">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/header.css"/>

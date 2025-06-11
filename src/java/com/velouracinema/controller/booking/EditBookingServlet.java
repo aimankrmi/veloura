@@ -7,6 +7,7 @@ package com.velouracinema.controller.booking;
 import com.velouracinema.dao.booking.BookingDAO;
 import com.velouracinema.model.Booking;
 import com.velouracinema.model.User;
+import com.velouracinema.util.Utils;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -52,7 +53,9 @@ public class EditBookingServlet extends HttpServlet {
         
         User userSession = (User) session.getAttribute("user");
         
-        if (userSession == null || !userSession.getRole().equalsIgnoreCase("member")) {
+        
+        
+        if (!Utils.authorizeUser(request, response, "member")) {
             response.sendError(401, "Unauthorized.");
             return;
         }
@@ -68,7 +71,7 @@ public class EditBookingServlet extends HttpServlet {
         }
         
         request.setAttribute("booking", booking);
-        request.getRequestDispatcher("views/booking/edit-booking.jsp").forward(request, response);
+        request.getRequestDispatcher("WEB-INF/views/booking/edit-booking.jsp").forward(request, response);
     }
 
     /**

@@ -5,6 +5,7 @@
 package com.velouracinema.controller.user;
 
 import com.velouracinema.model.User;
+import com.velouracinema.util.Utils;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -33,15 +34,22 @@ public class StaffServlet extends HttpServlet {
         HttpSession session = request.getSession();
 
         User user = (User) session.getAttribute("user");
-        if (user == null) {
+
+        if (!Utils.authorizeUser(request, response, "staff")) {
             response.sendError(401);
-        } else {
-            if (user.getRole().equalsIgnoreCase("staff")) {
-                request.getRequestDispatcher("views/staff/staff-dashboard.jsp").forward(request, response);
-            } else {
-                response.sendError(401);
-            }
+            return;
         }
+        
+        request.setAttribute("staff", user);
+        request.getRequestDispatcher("WEB-INF/views/staff/staff-dashboard.jsp").forward(request, response);
+
+//        if (user==null || user.getRole() == null) {
+//        } else {
+//            if (user.getRole().equalsIgnoreCase("staff")) {
+//            } else {
+//                response.sendError(401);
+//            }
+//        }
     }
 
 // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

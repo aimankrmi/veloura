@@ -60,8 +60,6 @@ public class BookingServlet extends HttpServlet {
     
         int id = 1;
         try {
-            
-            
             id = request.getParameter("id") != null ? Integer.parseInt(request.getParameter("id")) : 1;
 
             String bookingToken = UUID.randomUUID().toString();

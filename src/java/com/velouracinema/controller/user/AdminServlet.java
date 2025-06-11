@@ -5,6 +5,7 @@
 package com.velouracinema.controller.user;
 
 import com.velouracinema.model.User;
+import com.velouracinema.util.Utils;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -30,19 +31,12 @@ public class AdminServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession();
-
-        User user = (User) session.getAttribute("user");
-
-        if (user == null) {
+        if (!Utils.authorizeUser(request, response, "admin")) {
             response.sendError(401);
-        } else {
-            if (user.getRole().equalsIgnoreCase("admin")) {
-                request.getRequestDispatcher("views/admin/admin-dashboard.jsp").forward(request, response);
-            } else {
-                response.sendError(401);
-            }
+            return;
         }
+
+        request.getRequestDispatcher("WEB-INF/views/admin/admin-dashboard.jsp").forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

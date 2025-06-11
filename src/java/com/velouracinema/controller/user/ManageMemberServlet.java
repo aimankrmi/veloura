@@ -6,6 +6,7 @@ package com.velouracinema.controller.user;
 
 import com.velouracinema.dao.user.UserDAO;
 import com.velouracinema.model.User;
+import com.velouracinema.util.Utils;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
@@ -38,10 +39,11 @@ public class ManageMemberServlet extends HttpServlet {
 
         if (path.equals("/viewMember")) {
 
-            if (userSession == null || !userSession.getRole().equalsIgnoreCase("admin")) {
+            if (!Utils.authorizeUser(request, response, "admin")) {
                 response.sendError(401);
                 return;
             }
+
             List<User> members = UserDAO.getMembers();
             request.setAttribute("members", members);
             String error = request.getParameter("error");
@@ -52,16 +54,20 @@ public class ManageMemberServlet extends HttpServlet {
             if (message != null) {
                 request.setAttribute("message", message);
             }
-            request.getRequestDispatcher("views/admin/manage-member.jsp").forward(request, response);
+            request.getRequestDispatcher("WEB-INF/views/admin/manage-member.jsp").forward(request, response);
 
         } else if (path.equals(
                 "/updateMember")) {
-            if (userSession == null || !userSession.getRole().equalsIgnoreCase("member")) {
+
+            if (!Utils.authorizeUser(request, response, "member")) {
                 response.sendError(401);
+                return;
             }
+
             int id = Integer.parseInt(request.getParameter("id"));
             String name = request.getParameter("memberName");
             String username = request.getParameter("memberUsername");
+            String password = request.getParameter("memberPassword");
             String email = request.getParameter("memberEmail");
             String role = "member";
             String phoneNo = request.getParameter("memberPhoneNo");
@@ -82,6 +88,9 @@ public class ManageMemberServlet extends HttpServlet {
             member.setId(id);
             member.setName(name);
             member.setUsername(username);
+            if (password != "") {
+                member.setPassword(password);
+            }
             member.setEmail(email);
             member.setRole(role);
             member.setPhoneNo(phoneNo);
@@ -89,6 +98,7 @@ public class ManageMemberServlet extends HttpServlet {
             int status = UserDAO.updateUser(member);
 
             if (status != 0) {
+                session.setAttribute("user", member);
                 response.sendRedirect(request.getContextPath() + "/member?message=Successfully updated " + member.getUsername());
             } else {
                 response.sendError(501);
@@ -96,14 +106,23 @@ public class ManageMemberServlet extends HttpServlet {
 
         } else if (path.equals(
                 "/deleteMember")) {
-            if (userSession == null || !userSession.getRole().equalsIgnoreCase("member")) {
+            if (!Utils.authorizeUser(request, response, "member") && !Utils.authorizeUser(request, response, "admin")) {
                 response.sendError(401);
+                return;
             }
+
             int id = Integer.parseInt(request.getParameter("id"));
             int status = UserDAO.deleteUserById(id, "member");
 
             if (status != 0) {
-                response.sendRedirect(request.getContextPath() + "/member?message=Successfully deleted a member");
+                if (userSession.getRole().equals("member")) {
+                    session.removeAttribute("user");
+                    response.sendRedirect(request.getContextPath());
+                    return;
+                } else if (userSession.getRole().equals("admin")) {
+                    response.sendRedirect(request.getContextPath() + "/viewMember?message=Successfully deleted a member");
+                    return;
+                }
             } else {
                 response.sendError(501);
             }

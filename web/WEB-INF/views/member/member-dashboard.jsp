@@ -14,13 +14,17 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-        <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&family=Vibur&display=swap" rel="stylesheet">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&family=Vibur&display=swap"
+            rel="stylesheet">
         <link rel="stylesheet" href="assets/css/styles.css">
         <link rel="stylesheet" href="assets/css/header.css"/>
         <link rel="stylesheet" href="assets/css/footer.css"/>
     </head>
     <body>
-        <jsp:include page="../../includes/header.jsp" flush="true"/>
+        <jsp:include page="../../../includes/header.jsp" flush="true"/>
 
 
         <div class="container py-5">
@@ -94,6 +98,14 @@
                                                            id="memberUsernameFormControlInput" name="memberUsername" value="<c:out value='${member.username}'/>" required>
                                                 </div>
 
+                                                 <!-- PASSWORD -->
+                                                <div class="mb-3">
+                                                    <label for="memberPasswordFormControlInput" class="form-label">Password (only if you want to change)</label>
+                                                    <input type="text" class="form-control bg-dark text-white"
+                                                           id="memberPasswordFormControlInput" name="memberPassword" value="">
+                                                </div>
+
+                                                
                                                 <!-- EMAIL -->
                                                 <div class="mb-3">
                                                     <label for="memberEmailFormControlInput" class="form-label">Email</label>
@@ -126,9 +138,34 @@
                 </div>
 
             </div>
+            <div class="row justify-content-center mt-4">
+
+                <button type="button" class="btn btn-danger " style="width: 200px;" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                    Delete Your Account
+                </button>
+
+                <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content bg-dark text-white">
+                            <div class="modal-header bg-danger text-white">
+                                <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body ">
+                                <p class="mb-0">Are you sure you want to delete your account? This action cannot be undone.</p>
+                            </div>
+                            <div class="modal-footer ">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <a class="btn btn-danger " href="${pageContext.request.contextPath}/deleteMember?id=${member.id}">Delete Your Account</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
-        <jsp:include page="../../includes/footer.jsp" flush="true"/>
+        <jsp:include page="../../../includes/footer.jsp" flush="true"/>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>

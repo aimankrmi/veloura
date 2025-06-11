@@ -10,6 +10,7 @@ import com.velouracinema.model.Payment;
 import com.velouracinema.model.Seat;
 import com.velouracinema.util.DBUtil;
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -44,7 +45,7 @@ public class BookingDAO {
                 booking.setId(rs.getInt("booking_id"));
                 booking.setShowtimeId(rs.getInt("showtime_id"));
                 booking.setMemberId(rs.getInt("member_id"));
-                booking.setBookingDate(rs.getDate("booking_date"));
+                booking.setBookingDate(rs.getTimestamp("booking_date").toLocalDateTime());
                 booking.setStatus(rs.getString("booking_status"));
 
                 payment.setPaymentMethod(rs.getString("payment_method"));
@@ -77,7 +78,7 @@ public class BookingDAO {
                 booking.setId(rs.getInt("id"));
                 booking.setMemberId(rs.getInt("member_id"));
                 booking.setShowtimeId(rs.getInt("showtime_id"));
-                booking.setBookingDate(rs.getDate("booking_date"));
+                booking.setBookingDate(rs.getTimestamp("booking_date").toLocalDateTime());
                 booking.setStatus(rs.getString("status"));
             }
             booking.setPayment(PaymentDAO.getPaymentByBookingId(bookingId));
@@ -128,10 +129,10 @@ public class BookingDAO {
         return bookingId;
     }
 
-    public static Date getBookingDateById(int id) {
+    public static LocalDateTime getBookingDateById(int id) {
         String sql = "SELECT booking_date FROM bookings WHERE id = ?";
         Connection conn = null;
-        Date bookingDate = null;
+        LocalDateTime bookingDate = null;
 
         try {
             conn = DBUtil.getConnection();
@@ -142,7 +143,7 @@ public class BookingDAO {
             if (rs.next()) {
                 Timestamp timestamp = rs.getTimestamp("booking_date");
                 if (timestamp != null) {
-                    bookingDate = new Date(timestamp.getTime());
+                    bookingDate = timestamp.toLocalDateTime();
                 }
             }
 
@@ -261,7 +262,7 @@ public class BookingDAO {
                 booking.setMemberId(rs.getInt("member_id"));
                 booking.setShowtimeId(rs.getInt("showtime_id"));
                 booking.setStatus(rs.getString("status"));
-                booking.setBookingDate(rs.getDate("booking_date"));
+                booking.setBookingDate(rs.getTimestamp("booking_date").toLocalDateTime());
 
                 booking.setPayment(PaymentDAO.getPaymentByBookingId(rs.getInt("id")));
                 List<Seat> seats = new ArrayList<>();

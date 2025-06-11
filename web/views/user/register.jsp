@@ -19,8 +19,9 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;600&family=Vibur&display=swap" rel="stylesheet">
-
+        <link
+            href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&family=Vibur&display=swap"
+            rel="stylesheet">
         <!-- Custom Styles -->
         <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/styles.css">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/header.css">
@@ -98,30 +99,30 @@
             <form action="${pageContext.request.contextPath}/register" method="post">
                 <div class="mb-3">
                     <label for="fullname" class="form-label">Full Name</label>
-                    <input type="text" name="name" id="fullname" class="form-control" required placeholder="Enter full name">
+                    <input type="text" name="name" id="fullname" class="form-control bg-dark text-white" required placeholder="Enter full name">
                 </div>
 
                 <div class="mb-3">
                     <label for="username" class="form-label">Username</label>
-                    <input type="text" name="username" id="username" class="form-control" required placeholder="Enter username">
+                    <input type="text" name="username" id="username" class="form-control bg-dark text-white" required placeholder="Enter username">
                 </div>
 
                 <div class="mb-3">
                     <label for="phone" class="form-label">Mobile Number</label>
                     <div class="mobile-group">
-                        <input type="text" value="+60" class="form-control" disabled>
-                        <input type="text" name="phone" id="phone" class="form-control" required placeholder="123456789">
+                        <input type="text" value="+60" class="form-control bg-dark text-white" disabled>
+                        <input type="text" name="phone" id="phone" class="form-control bg-dark text-white" required placeholder="123456789">
                     </div>
                 </div>
 
                 <div class="mb-3">
                     <label for="email" class="form-label">Email Address</label>
-                    <input type="email" name="email" id="email" class="form-control" required placeholder="Enter email">
+                    <input type="email" name="email" id="email" class="form-control bg-dark text-white" required placeholder="Enter email">
                 </div>
 
                 <div class="mb-3">
                     <label for="password" class="form-label">Password</label>
-                    <input type="password" name="password" id="password" class="form-control" required placeholder="Enter password">
+                    <input type="password" name="password" id="password" class="form-control bg-dark text-white" required placeholder="Enter password">
                 </div>
 
                 <button type="submit" class="btn btn-warning w-100 mt-3">Create Account</button>

@@ -7,6 +7,7 @@ package com.velouracinema.controller.movie;
 import com.velouracinema.dao.movie.MovieDAO;
 import com.velouracinema.model.Movie;
 import com.velouracinema.model.User;
+import com.velouracinema.util.Utils;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
@@ -47,25 +48,18 @@ public class ManageMovieServlet extends HttpServlet {
         int status;
         Movie movie;
 
-        HttpSession session = request.getSession();
-
-        User user = (User) session.getAttribute("user");
-        if (user == null) {
+        if(!Utils.authorizeUser(request, response, "staff")){
             response.sendError(401);
             return;
-        } else {
-            if (!user.getRole().equalsIgnoreCase("staff")) {
-                response.sendError(401);
-                return;
-            }
         }
+        
 
         switch (path) {
 
             case "/viewMovies":
                 List<Movie> movies = MovieDAO.getAllMovies();
                 request.setAttribute("movies", movies);
-                request.getRequestDispatcher("/views/staff/manage-movies.jsp").forward(request, response);
+                request.getRequestDispatcher("WEB-INF/views/staff/manage-movies.jsp").forward(request, response);
                 break;
             case "/addMovie":
 
@@ -91,9 +85,7 @@ public class ManageMovieServlet extends HttpServlet {
                     movie.setPrice(price);
                     movie.setDescription(description);
                     movie.setImagePath(imagePath);
-                    System.out.println("HELLO1");
                     status = MovieDAO.insertMovie(movie);
-                    System.out.println("HELLO2");
                     if (status == 0) {
                         System.out.println("MOVIE INSERT FAILED");
                     } else {

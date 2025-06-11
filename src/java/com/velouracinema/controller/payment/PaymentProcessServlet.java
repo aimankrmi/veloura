@@ -7,6 +7,7 @@ package com.velouracinema.controller.payment;
 import com.velouracinema.dao.booking.BookingDAO;
 import com.velouracinema.dao.payment.PaymentDAO;
 import com.velouracinema.dao.booking.ShowtimeDAO;
+import com.velouracinema.util.Utils;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
@@ -73,6 +74,12 @@ public class PaymentProcessServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
+        if(!Utils.authorizeUser(request, response, "member")){
+            response.sendError(401);
+            return;
+        }
+        
         int status = 0;
         if (request.getParameter("bookingId") != null) {
             int bookingId = Integer.parseInt(request.getParameter("bookingId"));
@@ -82,12 +89,10 @@ public class PaymentProcessServlet extends HttpServlet {
             status = PaymentDAO.updatePaymentMethod(bookingId, paymentMethod);
             if (paymentMethod.equals("online")) {
                 status = PaymentDAO.updateStatusSuccess(bookingId);
-                System.out.println("UPDATE PAYMENT");
                 if (status > 0) {
                     status = BookingDAO.updateBookingStatus(bookingId);
-                    System.out.println("UPDATE BOOKING");
                     if (status > 0) {
-                        request.getRequestDispatcher("views/payment/success-payment.jsp").forward(request, response);
+                        request.getRequestDispatcher("WEB-INF/views/payment/success-payment.jsp").forward(request, response);
                     } else {
                         response.sendRedirect("booking");
                     }
@@ -105,7 +110,7 @@ public class PaymentProcessServlet extends HttpServlet {
 
                 status = BookingDAO.updateBookingStatus(bookingId);
                 if (status > 0) {
-                    request.getRequestDispatcher("views/payment/success-payment.jsp").forward(request, response);
+                    request.getRequestDispatcher("WEB-INF/views/payment/success-payment.jsp").forward(request, response);
 
                 }
             }

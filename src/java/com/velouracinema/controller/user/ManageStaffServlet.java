@@ -6,6 +6,7 @@ package com.velouracinema.controller.user;
 
 import com.velouracinema.dao.user.UserDAO;
 import com.velouracinema.model.User;
+import com.velouracinema.util.Utils;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
@@ -37,12 +38,12 @@ public class ManageStaffServlet extends HttpServlet {
         HttpSession session = request.getSession();
         User userSession = (User) session.getAttribute("user");
 
-        if (userSession == null || !userSession.getRole().equalsIgnoreCase("admin")) {
-            response.sendError(401);
-            return;
-        }
-
         if (path.equals("/viewStaff")) {
+
+            if (!Utils.authorizeUser(request, response, "admin")) {
+                response.sendError(401);
+                return;
+            }
 
             List<User> staffs = UserDAO.getStaffs();
             request.setAttribute("staffs", staffs);
@@ -54,19 +55,13 @@ public class ManageStaffServlet extends HttpServlet {
             if (message != null) {
                 request.setAttribute("message", message);
             }
-            request.getRequestDispatcher("views/admin/manage-staff.jsp").forward(request, response);
-//            if (user != null) {
-//                if (user.getRole().equalsIgnoreCase("admin")) {
-//
-//                } else {
-//                    response.sendError(401);
-//                }
-//            } else {
-//                response.sendError(401);
-//            }
+            request.getRequestDispatcher("WEB-INF/views/admin/manage-staff.jsp").forward(request, response);
 
         } else if (path.equals("/addStaff")) {
-
+            if (!Utils.authorizeUser(request, response, "admin")) {
+                response.sendError(401);
+                return;
+            }
             String name = request.getParameter("staffName");
             String username = request.getParameter("staffUsername");
             String email = request.getParameter("staffEmail");
@@ -100,10 +95,14 @@ public class ManageStaffServlet extends HttpServlet {
             }
 
         } else if (path.equals("/updateStaff")) {
-
+            if (!Utils.authorizeUser(request, response, "staff")) {
+                response.sendError(401);
+                return;
+            }
             int id = Integer.parseInt(request.getParameter("id"));
             String name = request.getParameter("staffName");
             String username = request.getParameter("staffUsername");
+            String password = request.getParameter("staffPassword");
             String email = request.getParameter("staffEmail");
             String role = "staff";
             String phoneNo = request.getParameter("staffPhoneNo");
@@ -111,25 +110,24 @@ public class ManageStaffServlet extends HttpServlet {
             System.out.println(email);
             if (UserDAO.isEmailUsed(email)) {
                 if (!UserDAO.getUserById(id).getEmail().equals(email)) {
-                    response.sendRedirect(request.getContextPath() + "/viewStaff?error=Email has been used");
+                    response.sendRedirect(request.getContextPath() + "/staff?error=Email has been used");
                     return;
                 }
             }
             if (UserDAO.isUsernameUsed(username)) {
                 if (!UserDAO.getUserById(id).getUsername().equals(username)) {
-                    response.sendRedirect(request.getContextPath() + "/viewStaff?error=Username has been used");
+                    response.sendRedirect(request.getContextPath() + "/staff?error=Username has been used");
                     return;
                 }
             }
-//            if (UserDAO.isEmailUsed(email) && UserDAO.getUserById(id).getEmail()==email ) {
-//                response.sendRedirect(request.getContextPath() + "/viewStaff?error=Email has been used");
-//                return;
-//            }
-
+            System.out.println("DALAM manageStaffServ: Pass = " + password);
             User staff = new User();
             staff.setId(id);
             staff.setName(name);
             staff.setUsername(username);
+            if (password != "") {
+                staff.setPassword(password);
+            }
             staff.setEmail(email);
             staff.setRole(role);
             staff.setPhoneNo(phoneNo);
@@ -137,12 +135,19 @@ public class ManageStaffServlet extends HttpServlet {
             int status = UserDAO.updateUser(staff);
 
             if (status != 0) {
-                response.sendRedirect(request.getContextPath() + "/viewStaff?message=Successfully updated " + staff.getUsername());
+                session.setAttribute("user", staff);
+                response.sendRedirect(request.getContextPath() + "/staff?message=Successfully updated " + staff.getUsername());
             } else {
                 response.sendError(501);
             }
 
         } else if (path.equals("/deleteStaff")) {
+
+            if (!Utils.authorizeUser(request, response, "staff") && !Utils.authorizeUser(request, response, "admin")) {
+                response.sendError(401);
+                return;
+            }
+
             int id = Integer.parseInt(request.getParameter("id"));
             int status = UserDAO.deleteUserById(id, "staff");
 

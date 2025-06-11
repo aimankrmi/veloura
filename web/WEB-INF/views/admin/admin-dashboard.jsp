@@ -61,7 +61,7 @@
         </style>
     </head>
     <body>
-        <jsp:include page="../../includes/header.jsp" flush="true"/>
+        <jsp:include page="../../../includes/header.jsp" flush="true"/>
         <p class="lead m-2 glow-white">Welcome, <strong>Admin</strong>! Manage your staff and oversee the system below.</p>
         <div class="container dashboard-container">
             <h1 class="dashboard-title">Admin Dashboard</h1>
@@ -91,7 +91,7 @@
             </div>
         </div>
 
-        <jsp:include page="../../includes/footer.jsp" flush="true"/>
+        <jsp:include page="../../../includes/footer.jsp" flush="true"/>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>

@@ -1,16 +1,15 @@
 <%-- 
-    Document   : success-edit
-    Created on : 26 May 2025, 7:54:32 pm
+    Document   : success-payment
+    Created on : 25 May 2025, 1:25:34 am
     Author     : Aiman
 --%>
-
 <%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Edit Successful</title>
+        <title>Booking Confirmed</title>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
@@ -27,17 +26,30 @@
     <body>
         <c:set var="paymentMethod" value="${param.paymentMethod}"/>
         <c:set var="bookingId" value="${param.bookingId}"/>
-        <jsp:include page="../../includes/header.jsp" />
+        <jsp:include page="../../../includes/header.jsp" />
         <div class="container-fluid justify-content-center align-items-center py-4">
-            <p class="display-3 glow-white" style="font-size:24px;">Edit Booking Completed</p>
-            <p class="text-center">You will be redirected in 5 seconds... If you are not redirected, <a href="index.jsp" class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover">click here</a></p>
+            <c:choose>
+                <c:when test="${paymentMethod=='online'}">
+                    <p class="display-3 glow-white" style="font-size:24px;">Booking Completed</p>
+                    <p class="text-center">Your Booking ID is ${bookingId}</p>
+                    <p class="text-center">Enjoy your show...</p>
+
+                </c:when>
+                <c:when test="${paymentMethod=='counter'}">
+                    <p class="display-3 glow-white" style="font-size:24px;">Booking Completed</p>
+                    <p class="text-center">Your Booking ID is ${bookingId}</p>
+                    <p class="text-center">Please pay at counter 3 hours prior movie showtime...</p>
+                </c:when>
+
+            </c:choose>
+                    <p class="text-center">You will be redirected in 5 seconds... If you are not redirected, <a href="${pageContext.request.contextPath}" class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover">click here</a></p>
         </div>
         <script>
             setTimeout(function () {
-                window.location.href = 'index.jsp';
+                window.location.href = '${pageContext.request.contextPath}';
             }, 5000); // 5000 milliseconds = 5 seconds
         </script>
 
-        <jsp:include page="../../includes/footer.jsp" />
+        <jsp:include page="../../../includes/footer.jsp" />
     </body>
 </html>

@@ -7,6 +7,7 @@ package com.velouracinema.controller.booking;
 import com.velouracinema.dao.booking.BookingDAO;
 import com.velouracinema.dao.booking.SeatDAO;
 import com.velouracinema.model.User;
+import com.velouracinema.util.Utils;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -53,7 +54,8 @@ public class ProcessEditBookingServlet extends HttpServlet {
         
         User userSession = (User) session.getAttribute("user");
         
-        if (userSession == null || !userSession.getRole().equalsIgnoreCase("member")) {
+        
+        if (Utils.authorizeUser(request, response, "member")) {
             response.sendError(401, "Unauthorized.");
             return;
         }

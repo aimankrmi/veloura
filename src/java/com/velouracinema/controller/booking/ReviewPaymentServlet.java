@@ -6,6 +6,7 @@ package com.velouracinema.controller.booking;
 
 import com.velouracinema.dao.booking.BookingDAO;
 import com.velouracinema.model.Booking;
+import com.velouracinema.util.Utils;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
@@ -32,11 +33,16 @@ public class ReviewPaymentServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
+        if(!Utils.authorizeUser(request, response, "staff")){
+            response.sendError(401);
+            return;
+        }
+        
         List<Booking> bookings = BookingDAO.getAllBookings();
         
         request.setAttribute("bookings", bookings);
         
-        request.getRequestDispatcher("views/payment/review-payment.jsp").forward(request, response);
+        request.getRequestDispatcher("WEB-INF/views/payment/review-payment.jsp").forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

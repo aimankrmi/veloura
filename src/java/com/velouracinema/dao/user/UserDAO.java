@@ -6,6 +6,7 @@ package com.velouracinema.dao.user;
 
 import com.velouracinema.model.User;
 import com.velouracinema.util.DBUtil;
+import com.velouracinema.util.Utils;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -92,7 +93,7 @@ public class UserDAO {
             stmt.setString(1, user.getName());
             stmt.setString(2, user.getUsername());
             stmt.setString(3, user.getEmail());
-            stmt.setString(4, user.getPassword());
+            stmt.setString(4, Utils.SHA256Hash(user.getPassword()));
             stmt.setString(5, user.getRole());
             stmt.setString(6, user.getPhoneNo());
 
@@ -108,13 +109,23 @@ public class UserDAO {
     }
 
     public static int updateUser(User user) {
-
-        String sql = "UPDATE users SET "
-                + "name = ?,"
-                + "username = ?,"
-                + "email = ?,"
-                + "phone_no = ?"
-                + "WHERE id=? AND role=?";
+        String sql;
+        if (user.getPassword() != null) {
+            sql = "UPDATE users SET "
+                    + "name = ?,"
+                    + "username = ?,"
+                    + "password = ?,"
+                    + "email = ?,"
+                    + "phone_no = ?"
+                    + "WHERE id=? AND role=?";
+        } else {
+            sql = "UPDATE users SET "
+                    + "name = ?,"
+                    + "username = ?,"
+                    + "email = ?,"
+                    + "phone_no = ?"
+                    + "WHERE id=? AND role=?";
+        }
 
         Connection conn = null;
         int status = 0;
@@ -123,10 +134,18 @@ public class UserDAO {
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, user.getName());
             stmt.setString(2, user.getUsername());
-            stmt.setString(3, user.getEmail());
-            stmt.setString(4, user.getPhoneNo());
-            stmt.setInt(5, user.getId());
-            stmt.setString(6, user.getRole());
+            if (user.getPassword() != null) {
+                stmt.setString(3, user.getPassword());
+                stmt.setString(4, user.getEmail());
+                stmt.setString(5, user.getPhoneNo());
+                stmt.setInt(6, user.getId());
+                stmt.setString(7, user.getRole());
+            } else {
+                stmt.setString(3, user.getEmail());
+                stmt.setString(4, user.getPhoneNo());
+                stmt.setInt(5, user.getId());
+                stmt.setString(6, user.getRole());
+            }
 
             status = stmt.executeUpdate();
 

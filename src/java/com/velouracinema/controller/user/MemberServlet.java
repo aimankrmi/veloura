@@ -53,11 +53,11 @@ public class MemberServlet extends HttpServlet {
                 request.setAttribute("message", message);
             }
             request.setAttribute("member", userSession);
-            request.getRequestDispatcher("views/member/member-dashboard.jsp").forward(request, response);
+            request.getRequestDispatcher("WEB-INF/views/member/member-dashboard.jsp").forward(request, response);
         } else if (path.equals("/viewBookingHistory")) {
             List<Booking> bookings = BookingDAO.getBookingByMemberId(userSession.getId());
             request.setAttribute("bookings", bookings);
-            request.getRequestDispatcher("views/member/booking-history.jsp").forward(request, response);
+            request.getRequestDispatcher("WEB-INF/views/member/booking-history.jsp").forward(request, response);
             
         }
 

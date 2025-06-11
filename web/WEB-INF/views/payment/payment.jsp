@@ -24,7 +24,7 @@
 
     </head>
     <body>
-        <jsp:include page="../../includes/header.jsp" />
+        <jsp:include page="../../../includes/header.jsp" />
         <jsp:useBean id="booking" class="com.velouracinema.model.Booking" scope="request"/>
         <jsp:useBean id="showtime" class="com.velouracinema.model.Showtime" scope="request"/>
         <fmt:parseDate value="${showtime.showDate}" type="both" var="parsedDate" pattern="yyyy-MM-dd"/>
@@ -221,7 +221,7 @@
                     });
                 });
             </script>
-        <jsp:include page="../../includes/footer.jsp" />
+        <jsp:include page="../../../includes/footer.jsp" />
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
     </body>

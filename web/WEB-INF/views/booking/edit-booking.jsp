@@ -29,7 +29,7 @@
     <fmt:parseDate value="${booking.showtime.showDate}" type="both" var="parsedDate" pattern="yyyy-MM-dd"/>
     <fmt:parseDate value="${booking.showtime.showTime}" type="time" var="parsedTime" pattern="HH:mm:ss"/>
 
-    <jsp:include page="../../includes/header.jsp" />
+    <jsp:include page="../../../includes/header.jsp" />
     <div class="fluid-container">
         <div class="row justify-content-center py-3">
             <a href="${pageContext.request.contextPath}/viewBookingHistory" class="ms-3"><i class="fa-solid fa-circle-chevron-left fa-xl me-2" style="color: var(--color-light-gold);"></i></a>
@@ -191,7 +191,7 @@
     </form>
 
 
-    <jsp:include page="../../includes/footer.jsp" />
+    <jsp:include page="../../../includes/footer.jsp" />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

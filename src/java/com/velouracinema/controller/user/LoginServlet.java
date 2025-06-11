@@ -6,6 +6,7 @@ package com.velouracinema.controller.user;
 
 import com.velouracinema.dao.user.UserDAO;
 import com.velouracinema.model.User;
+import com.velouracinema.util.Utils;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -35,19 +36,7 @@ public class LoginServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet LoginServlet</title>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet LoginServlet at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
+       
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -96,8 +85,8 @@ public class LoginServlet extends HttpServlet {
             throws ServletException, IOException {
 
         String username = request.getParameter("username");
-        String password = request.getParameter("password");
-
+        String password = Utils.SHA256Hash(request.getParameter("password"));
+        System.out.println("Hashed PASS: " + password);
         User user = UserDAO.getUser(username, password);
         boolean urlRedirect = Boolean.parseBoolean(request.getParameter("urlRedirect"));
         String time = request.getParameter("time-show");
@@ -120,6 +109,7 @@ public class LoginServlet extends HttpServlet {
             HttpSession session = request.getSession();
 
             session.setAttribute("user", user);
+            
             // Redirect user based on role
             if ("admin".equalsIgnoreCase(user.getRole())) {
                 response.sendRedirect(request.getContextPath() + "/admin");

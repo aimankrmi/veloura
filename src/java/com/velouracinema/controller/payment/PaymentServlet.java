@@ -14,6 +14,7 @@ import com.velouracinema.model.Payment;
 import com.velouracinema.model.Seat;
 import com.velouracinema.model.Showtime;
 import com.velouracinema.model.User;
+import com.velouracinema.util.Utils;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
@@ -171,7 +172,7 @@ public class PaymentServlet extends HttpServlet {
 
         // Invalidate token now - no more booking insertions allowed with this token
         // session.removeAttribute("bookingToken");
-        Date bookingDate = BookingDAO.getBookingDateById(bookingId);
+        LocalDateTime bookingDate = BookingDAO.getBookingDateById(bookingId);
         for (String seat : seats) {
             seatId = SeatDAO.getSeatId(showtimeId, seat);
             SeatDAO.changeStatusById(seatId);
@@ -221,7 +222,7 @@ public class PaymentServlet extends HttpServlet {
         // request.setAttribute("seat", seats);
         request.setAttribute("booking", booking);
 
-        request.getRequestDispatcher("views/payment/payment.jsp").forward(request, response);
+        request.getRequestDispatcher("WEB-INF/views/payment/payment.jsp").forward(request, response);
 
     }
 

@@ -5,6 +5,7 @@
 package com.velouracinema.controller.payment;
 
 import com.velouracinema.dao.payment.PaymentDAO;
+import com.velouracinema.util.Utils;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -29,6 +30,11 @@ public class UpdatePaymentServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
+        if(!Utils.authorizeUser(request, response, "staff")){
+            response.sendError(401);
+            return;
+        }
         
         String paymentStatus = request.getParameter("paymentStatus");
         int bookingId = Integer.parseInt(request.getParameter("bookingId"));
