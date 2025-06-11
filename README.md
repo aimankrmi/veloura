@@ -140,7 +140,7 @@ VelouraCinemaTicket/
 │   │   └── HomeServlet.java
 │   │   
 │   ├── com.velouracinema.controller.movie/
-│   │   └── ManageMovieServlet.java, MovieServlet.java
+│   │   └── ManageMovieServlet.java
 │   │   
 │   ├── com.velouracinema.controller.payment/
 │   │   └── PaymentProcessServlet.java, PaymentServlet.java, UpdatePaymentServlet.java
