@@ -71,9 +71,9 @@ Overall, the system bridges the gap between traditional cinema experiences and m
   
     Update the DBUtil.java file with your actual MySQL credentials:
        
-    - jdbc.url=jdbc:mysql://localhost:3306/veloura
+ ```- jdbc.url=jdbc:mysql://localhost:3306/veloura
     - jdbc.username=databaseuser
-    - jdbc.password=yourpassword
+    - jdbc.password=yourpassword```
       
 6. **Deploy & Run the project using Apache Tomcat**
      Open your browser and go to:
