@@ -6,6 +6,7 @@ Veloura Cinema Ticket is a web-based movie ticket booking system developed using
 
 ## 📖 Project Overview
 
+
 **Veloura Cinema Ticket** is a web-based Cinema Ticket Management System developed to enhance and simplify the ticketing experience for both customers and cinema staff. The system resolves common issues in traditional ticketing methods, such as long queues, double bookings, and outdated seat availability displays.
 
 This digital solution provides:
@@ -15,11 +16,13 @@ This digital solution provides:
 - 👤 User account functionality for easier ticket management  
 - 🛠️ Admin tools for cinema staff to manage movie listings and schedules
 
+
 ### 🎯 Purpose of the System
 
 - ✅ Allow users to **modify their bookings after payment**, offering flexibility for last-minute changes without needing to cancel and rebook.
 - ⏳ Eliminate pressure from **time-limited payment sessions**, making the system more accessible — especially for older users or those unfamiliar with online payments.
 - 🧾 Reduce long queues at cinema counters by encouraging **smooth, reliable online booking**, improving customer satisfaction and easing staff workload.
+
 
 Overall, the system bridges the gap between traditional cinema experiences and modern technology, creating a faster, smarter, and more enjoyable movie-going experience.
 
@@ -67,11 +70,11 @@ Overall, the system bridges the gap between traditional cinema experiences and m
    - Run the SQL dump: filename.sql db/filename.sql to create tables and sample data.
   
     Update the DBUtil.java file with your actual MySQL credentials:
-       
-       ``` - jdbc.url=jdbc:mysql://localhost:3306/veloura
+       ```
+        - jdbc.url=jdbc:mysql://localhost:3306/veloura
         - jdbc.username=databaseuser
         - jdbc.password=yourpassword
-         ```
+      ```
 6. **Deploy & Run the project using Apache Tomcat**
      Open your browser and go to:
      ```
