@@ -30,11 +30,11 @@ Overall, the system bridges the gap between traditional cinema experiences and m
 
 ## 👥 Group Members & Responsibilities
 
-| Name                                  | Role & Responsibilities                          |
-|---------------------------------------|--------------------------------------------------|
-| Muhamad Noraiman Karami Bin Rahim     | Backend Developer – JSP, Servlets, Movie module  |
-| Siti Fikriyah Binti I.R. Abdul Khawi  | Frontend Developer – HTML/CSS/JS, UI Design      |
-| Nur Alieya Natasya Binti Azha         | Database Admin – MySQL, ERD, SQL scripts         |
+| Name                                  | Modules Responsibility                            | Role & Responsibility                            |
+|---------------------------------------|---------------------------------------------------|--------------------------------------------------|
+| Muhamad Noraiman Karami Bin Rahim     | Booking Management Module                         | Backend Developer – JSP, Servlets, Movie module  |
+| Siti Fikriyah Binti I.R. Abdul Khawi  | Movies Management Module                          | Frontend Developer – HTML/CSS/JS, UI Design      |
+| Nur Alieya Natasya Binti Azha         | User Management Module, Support Management Module | Database Admin – MySQL, ERD, SQL scripts         |
 
 ---
 
@@ -46,6 +46,16 @@ Overall, the system bridges the gap between traditional cinema experiences and m
 - HTML, CSS, JavaScript
 - MySQL
 - Apache Tomcat 9
+
+---
+
+## 🧪 Features
+
+- 🎬 View list of all movies with posters
+- 📅 Select available show dates and times
+- 🪑 View available seats per screening
+- 📝 Book tickets 
+- 🔐 Admin login to manage movie listings
 
 ---
 
@@ -81,16 +91,6 @@ Overall, the system bridges the gap between traditional cinema experiences and m
      ```
       http://localhost:8080/Veloura
      ```
----
-
-## 🧪 Features
-
-- 🎬 View list of all movies with posters
-- 📅 Select available show dates and times
-- 🪑 View available seats per screening
-- 📝 Book tickets 
-- 🔐 Admin login to manage movie listings
-
 ---
 
 ## 📂 Project Structure
