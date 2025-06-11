@@ -72,12 +72,10 @@ Overall, the system bridges the gap between traditional cinema experiences and m
         jdbc.password=yourpassword`
 
 5. **Deploy & Run the project using Apache Tomcat**
-
-  Open your browser and go to:
-   ```
-   http://localhost:8080/Veloura
-   ```
-
+     Open your browser and go to:
+     ```
+      http://localhost:8080/Veloura
+     ```
 ---
 
 ## 🧪 Features
@@ -85,8 +83,8 @@ Overall, the system bridges the gap between traditional cinema experiences and m
 - 🎬 View list of all movies with posters
 - 📅 Select available show dates and times
 - 🪑 View available seats per screening
-- 📝 Book tickets (future implementation)
-- 🔐 (Optional) Admin login to manage movie listings
+- 📝 Book tickets 
+- 🔐 Admin login to manage movie listings
 
 ---
 
