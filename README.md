@@ -54,24 +54,25 @@ Overall, the system bridges the gap between traditional cinema experiences and m
    ```
 
 2. **Open the project in NetBeans.**
-   - File → Open Project → Select `veloura`
+   - File → Open Project → Select ``veloura``
 
 3. **Import Dependencies**
    Ensure the following libraries are added to your project:
-   
-     - `JSTL.jar`
-     - `mysql-connector-j-9.2.0.jar`
-
+     ```
+     - JSTL.jar
+     - mysql-connector-j-9.2.0.jar
+      ```
 4. **Configure MySQL database:**
-   - Create a database: `cinema_db`
+   - Create a database: ``cinema_db``
    - Run the SQL dump: filename.sql db/filename.sql to create tables and sample data.
   
     Update the DBUtil.java file with your actual MySQL credentials:
-       `jdbc.url=jdbc:mysql://localhost:3306/veloura
+       ```
+        jdbc.url=jdbc:mysql://localhost:3306/veloura
         jdbc.username=databaseuser
-        jdbc.password=yourpassword`
-
-5. **Deploy & Run the project using Apache Tomcat**
+        jdbc.password=yourpassword
+         ```
+6. **Deploy & Run the project using Apache Tomcat**
      Open your browser and go to:
      ```
       http://localhost:8080/Veloura
