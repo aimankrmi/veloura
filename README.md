@@ -105,17 +105,21 @@ VelouraCinemaTicket/
 │   │   └── web.xml
 │   │   ├── views/
 │   │   │   ├── admin/
-│   │   │   │   └── admin-dashboard.jsp, manage-member.jsp, manage-staff.jsp
+│   │   │       └── admin-dashboard.jsp, manage-member.jsp, manage-staff.jsp
 │   │   │   ├── booking/
-│   │   │   │   └── edit-booking.jsp, success-edit.jsp
+│   │   │       └── edit-booking.jsp, success-edit.jsp
 │   │   │   ├── member/
-│   │   │   │   └── booking-history.jsp, member-dashboard.jsp
+│   │   │       └── booking-history.jsp, member-dashboard.jsp
 │   │   │   ├── payment/
-│   │   │   │   └── payment.jsp, review-payment.jsp, seccuess-payment.jsp
+│   │   │       └── payment.jsp, review-payment.jsp, seccuess-payment.jsp
 │   │   │   ├── staff/
-│   │   │   │   └── manage-movies.jsp, staff-dashboard.jsp
+│   │   │       └── manage-movies.jsp, staff-dashboard.jsp
 │   │   │   ├── user/
-│   │   │   │   └── login.jsp, register.jsp
+│   │   │       └── login.jsp, register.jsp
+│   │   │   ├── booking/
+│   │   │       └── booking.jsp
+│   │   │   ├── error/
+│   │   │       └── 409.jsp, error.jsp
 │   ├── assets/
 │   │   ├── css/
 │   │       └── booking.css, footer.css, header.css, movie.css, payment.css, styles.css
@@ -126,12 +130,7 @@ VelouraCinemaTicket/
 │   │   ├── js/
 │   │       └── booking.js, edit-booking.js, scripts.js
 │   ├── includes/
-│   │   └── footer.jsp, header.jsp, seat-legend.jsp, seat-row.jsp
-│   ├── views/
-│   │   ├── booking/
-│   │       └── booking.jsp
-│   │   ├── error/
-│   │       └── 409.jsp, error.jsp
+│       └── footer.jsp, header.jsp, seat-legend.jsp, seat-row.jsp
 │   │     
 ├── Source Packages/
 │   ├── com.velouracinema.controller.booking/
