@@ -177,6 +177,14 @@ VelouraCinemaTicket/
 
 ---
 
+## 🔒 Security Notes
+
+- Passwords are hashed using SHA-256 before storage.
+- Auto-expiry protect against unauthorized access.
+- Admin-only operations are protected from frontend access.
+
+--- 
+
 ## 🌐 Live Demo 
 
 > If deployed: [https://velouracinema-demo.vercel.app](https://velouracinema-demo.vercel.app)  
