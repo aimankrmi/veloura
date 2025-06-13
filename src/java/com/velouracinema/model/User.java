@@ -11,11 +11,12 @@ package com.velouracinema.model;
 public class User {
     
     private int id;
+    private String name;
     private String username;
     private String email;
     private String password;
     private String role;
-    private String phone_no;
+    private String phoneNo;
 
     public int getId() {
         return id;
@@ -23,6 +24,14 @@ public class User {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getUsername() {
@@ -57,12 +66,12 @@ public class User {
         this.role = role;
     }
 
-    public String getPhone_no() {
-        return phone_no;
+    public String getPhoneNo() {
+        return phoneNo;
     }
 
-    public void setPhone_no(String phone_no) {
-        this.phone_no = phone_no;
+    public void setPhoneNo(String phoneNo) {
+        this.phoneNo = phoneNo;
     }
     
     

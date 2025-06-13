@@ -7,12 +7,16 @@ const selectedSeatText = document.getElementById('seat-selected-list');
 const seatSelectionWrapper = document.querySelector('.seat-selection-wrapper');
 let seatMax = 10;
 
-document.getElementById("confirmButton").addEventListener("click", function (e) {
-    if (seatSelectionWrapper.hasAttribute("data-seat-booked") && selectedSeat.length !== seatMax) {
-        e.preventDefault();
-        alert(`Please select exactly ${seatMax} seat${seatMax > 1 ? 's' : ''}.`);
-    }
-});
+const confirmButton = document.getElementById("confirmButton");
+if(confirmButton){
+    confirmButton.addEventListener("click", function (e) {
+        if (seatSelectionWrapper.hasAttribute("data-seat-booked") && selectedSeat.length !== seatMax) {
+            e.preventDefault();
+            alert(`Please select exactly ${seatMax} seat${seatMax > 1 ? 's' : ''}.`);
+        }
+    });
+    
+}
 
 
 if (seatSelectionWrapper) {
@@ -20,7 +24,6 @@ if (seatSelectionWrapper) {
         seatMax = parseInt(seatSelectionWrapper.getAttribute("data-seat-booked"));
     }
 }
-console.log(seatMax);
 
 let selectedSeat = [];
 function addSeat(id) {
@@ -203,7 +206,6 @@ function updateDateAndTime() {
         dateCheckboxes.forEach((checkbox) => {
             let dateVal = checkbox.getAttribute("data-date");
             if (dateVal === date) {
-                console.log(dateVal);
                 // Remove the "Selected" class from all radio buttons
                 var radios = document.querySelectorAll('input[name="date"]');
                 radios.forEach(function (radio) {
@@ -215,7 +217,6 @@ function updateDateAndTime() {
                 checkbox.checked = true;
             }
         });
-        console.log("Hello");
         // Disable the selected radio button dynamically
         disableSelectedRadioButtonDate();
     }
@@ -224,7 +225,6 @@ function updateDateAndTime() {
         timeCheckboxes.forEach((checkbox) => {
             let timeVal = checkbox.getAttribute("data-time");
             if (timeVal == time) {
-                console.log(timeVal);
                 // Remove the "Selected" class from all radio buttons
                 var radios = document.querySelectorAll('input[name="time"]');
                 radios.forEach(function (radio) {

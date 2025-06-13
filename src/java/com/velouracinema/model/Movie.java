@@ -4,8 +4,14 @@ package com.velouracinema.model;
  *
  * @author sitif
  */
-import com.velouracinema.dao.MovieDAO;
+import com.velouracinema.dao.booking.ShowtimeDAO;
+import com.velouracinema.dao.movie.MovieDAO;
 import com.velouracinema.util.Utils;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Movie implements java.io.Serializable {
 
@@ -17,6 +23,8 @@ public class Movie implements java.io.Serializable {
     private String language;
     private double price;
     private String imagePath;
+    private Date releaseDate;
+    private final int expiredDay = 14;
 
     // Getters and Setters
     public int getMovieId() {
@@ -28,19 +36,26 @@ public class Movie implements java.io.Serializable {
     }
 
     public int getPreviousMovieId() {
-        if (this.movieId > 1) {
-            return this.movieId - 1;
+        List<Integer> ids = MovieDAO.getMovieIds();
+        int index = ids.indexOf(movieId);
+
+        if (index > 0) {
+            return ids.get(index - 1);
         } else {
-            return MovieDAO.getAllMovies().size();
+            return ids.get(ids.size() - 1);
         }
     }
 
     public int getNextMovieId() {
-        if (this.movieId + 1 > MovieDAO.getAllMovies().size()) {
-            return 1;
+        List<Integer> ids = MovieDAO.getMovieIds();
+        int index = ids.indexOf(movieId);
+
+        if (index + 1 == ids.size()) {
+            return ids.get(0);
         } else {
-            return this.movieId + 1;
+            return ids.get(index + 1);
         }
+
     }
 
     public String getLanguage() {
@@ -52,7 +67,7 @@ public class Movie implements java.io.Serializable {
     }
 
     public String getTitle() {
-    return title;
+        return title;
     }
 
     public void setTitle(String title) {
@@ -105,6 +120,62 @@ public class Movie implements java.io.Serializable {
 
     public int getMinutes() {
         return Utils.calcDurationMinutes(this.duration);
+    }
+
+    public Date getReleaseDate() {
+        return releaseDate;
+    }
+
+    public void setReleaseDate(Date releaseDate) {
+
+        this.releaseDate = releaseDate;
+    }
+
+    // Method to assign the release date from the string input
+    public void setReleaseDateFromString(String releaseDateString) {
+        // Define the input format: dd/MM/yyyy
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+
+        // Parse the string to LocalDate
+        LocalDate localDate = LocalDate.parse(releaseDateString, formatter);
+
+        // Convert LocalDate to java.sql.Date (this matches the format MySQL expects)
+        this.releaseDate = Date.valueOf(localDate);
+    }
+
+    public String getStatus() {
+//        return releaseDate.toLocalDate().isAfter(LocalDate.now()) ? "Coming Soon" : "On Going";
+
+        LocalDate today = LocalDate.now();
+        LocalDate release = releaseDate.toLocalDate(); // Convert sql.Date to LocalDate
+
+        if (today.isBefore(release)) {
+            return "Coming Soon";
+        } else if (today.isBefore(release.plusDays(expiredDay-1))) {
+            return "Ongoing";
+        } else {
+            return "Expired";
+        }
+
+    }
+
+//    To get for 4 days after today
+    public List<String> getAvailableDates() {
+
+        List<String> availableDates = new ArrayList<>();
+
+        if (getStatus().equalsIgnoreCase("Ongoing")) {
+
+            LocalDate todayDate = LocalDate.now();
+            LocalDate lastDate = LocalDate.now().plusDays(3);
+
+            for (LocalDate availableDate = todayDate; !availableDate.isAfter(lastDate); availableDate = availableDate.plusDays(1)) {
+                availableDates.add(availableDate.toString());
+            }
+
+        }
+        System.out.println(availableDates.size());
+        return availableDates;
     }
 
 }

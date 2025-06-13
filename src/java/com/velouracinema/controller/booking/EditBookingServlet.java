@@ -4,46 +4,23 @@
  */
 package com.velouracinema.controller.booking;
 
-import com.velouracinema.dao.BookingDAO;
+import com.velouracinema.dao.booking.BookingDAO;
 import com.velouracinema.model.Booking;
+import com.velouracinema.model.User;
+import com.velouracinema.util.Utils;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
  * @author Aiman
  */
 public class EditBookingServlet extends HttpServlet {
-
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet EditBookingServlet</title>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet EditBookingServlet at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
-    }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -57,15 +34,8 @@ public class EditBookingServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-//            TEMPORARY USER AND BOOKING ID
-        int member_id = 5;
-        int booking_id = 66;
-
-        Booking booking = BookingDAO.getBookingById(booking_id, member_id);
-
-        request.setAttribute("booking", booking);
-        request.getRequestDispatcher("views/edit-booking.jsp").forward(request, response);
+//        response.sendRedirect(request.getContextPath()+"/member");
+        response.sendError(401);
     }
 
     /**
@@ -79,7 +49,34 @@ public class EditBookingServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.sendRedirect(request.getContextPath() + "/booking");
+        HttpSession session = request.getSession();
+
+        User userSession = (User) session.getAttribute("user");
+
+        if (!Utils.authorizeUser(request, response, "member")) {
+            response.sendError(401, "Unauthorized.");
+            return;
+        }
+
+        int member_id = userSession.getId();
+        int booking_id = Integer.parseInt(request.getParameter("bookingId"));
+
+        Booking booking = BookingDAO.getBookingByMemberId(booking_id, member_id);
+
+        String action = request.getParameter("action");
+
+        if (action.equals("edit")) {
+            if (booking.getShowtime().getMovie().getStatus().equalsIgnoreCase("Expired")) {
+                response.sendError(501, "Expired movie to be update");
+            }
+
+            request.setAttribute("booking", booking);
+            request.getRequestDispatcher("WEB-INF/views/booking/edit-booking.jsp").forward(request, response);
+        } else if(action.equals("cancel")) {
+            BookingDAO.cancelBookingByBookingId(booking_id);
+            response.sendRedirect(request.getContextPath()+"/viewBookingHistory");
+        }
+
     }
 
     /**

@@ -4,7 +4,9 @@
  */
 package com.velouracinema.model;
 
-import com.velouracinema.dao.ShowtimeDAO;
+import com.velouracinema.dao.booking.ShowtimeDAO;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 
@@ -12,12 +14,13 @@ import java.util.List;
  *
  * @author Aiman
  */
-public class Booking implements java.io.Serializable{
+public class Booking implements java.io.Serializable {
+
     private int id;
     private int memberId;
     private int showtimeId;
     private String status;
-    private Date bookingDate;
+    private LocalDateTime bookingDate;
     private Payment payment;
     private List<Seat> seats;
 
@@ -45,15 +48,21 @@ public class Booking implements java.io.Serializable{
         this.showtimeId = showtimeId;
     }
 
-    public Showtime getShowtime(){
+    public Showtime getShowtime() {
         return ShowtimeDAO.getShowtimeById(this.showtimeId);
     }
-    
-    public Date getBookingDate() {
+
+    public LocalDateTime getBookingDate() {
         return bookingDate;
     }
 
-    public void setBookingDate(Date bookingDate) {
+    public String getBookingDateFormatted() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy | HH:mm a");
+
+        return bookingDate.format(formatter);
+    }
+
+    public void setBookingDate(LocalDateTime bookingDate) {
         this.bookingDate = bookingDate;
     }
 
@@ -80,6 +89,5 @@ public class Booking implements java.io.Serializable{
     public void setStatus(String status) {
         this.status = status;
     }
-    
-    
+
 }

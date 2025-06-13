@@ -79,7 +79,10 @@ body {
   animation: glow-white 1s ease-in-out infinite alternate;
 }
 
-
+.scrollbar-gold {
+  scrollbar-color: var(--color-dark-gold) var(--color-black) !important;
+  scrollbar-width: thin !important;
+}
 
 /*Glow animation*/
 @keyframes glow-gold {
