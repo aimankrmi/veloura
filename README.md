@@ -52,10 +52,10 @@ Overall, the system bridges the gap between traditional cinema experiences and m
 ## ✨ Features
 
 ### 🛡️ Admin
-- 🔐 Login with elevated access control  
+- 🔐 Secure login with admin credentials
+- 👥 Add and delete staff accounts (user management)
 - 🎬 Manage movie listings (add/edit/delete)  
 - 📅 Configure showtimes and assign screens  
-- 📊 Manage staff information  
 
 ### 🧑‍💼 Staff
 - 🗓️ Update movie details  
