@@ -5,6 +5,7 @@
 package com.velouracinema.controller.booking;
 
 import com.velouracinema.dao.booking.BookingDAO;
+import com.velouracinema.dao.booking.BookingSeatDAO;
 import com.velouracinema.dao.booking.SeatDAO;
 import com.velouracinema.model.User;
 import com.velouracinema.util.Utils;
@@ -55,7 +56,7 @@ public class ProcessEditBookingServlet extends HttpServlet {
         User userSession = (User) session.getAttribute("user");
         
         
-        if (Utils.authorizeUser(request, response, "member")) {
+        if (!Utils.authorizeUser(request, response, "member")) {
             response.sendError(401, "Unauthorized.");
             return;
         }
@@ -69,7 +70,7 @@ public class ProcessEditBookingServlet extends HttpServlet {
             String[] newSeats = request.getParameterValues("seat");
             String[] bookedSeats = request.getParameterValues("booked-seat");
             
-            BookingDAO.removeBookedSeatsByBookingId(bookingId);
+            BookingSeatDAO.removeBookedSeatsByBookingId(bookingId);
             
             for (String seat : bookedSeats) {
                 int seatId = Integer.parseInt(seat);
@@ -79,7 +80,7 @@ public class ProcessEditBookingServlet extends HttpServlet {
             for (String seat : newSeats) {
                 int seatId = SeatDAO.getSeatId(showtimeId, seat);
                 SeatDAO.changeStatusById(seatId);
-                BookingDAO.insertBookedSeat(bookingId, seatId);
+                BookingSeatDAO.insertBookedSeat(bookingId, seatId);
             }
             
         } else {

@@ -35,7 +35,7 @@ public class Utils {
     public static boolean authorizeUser(HttpServletRequest request, HttpServletResponse response, String role) {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
-        if (user == null || user.getRole() == null || !user.getRole().equals(role)) {
+        if (user == null || user.getId() == 0 || user.getRole() == null || !user.getRole().equals(role)) {
                 return false;
         }
         return true;
@@ -98,7 +98,7 @@ public class Utils {
         return "";
     }
     
-    public static String formatHours(String str) {
+    public static String formatTime(String str) {
         LocalTime time = LocalTime.parse(str);
 
 //        int hour = time.getHour();

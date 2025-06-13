@@ -25,7 +25,7 @@
         <link rel="stylesheet" href="assets/css/footer.css" />
     </head>
     <body>
-        <jsp:include page="../../../includes/header.jsp" flush="true" />
+        <jsp:include page="../../includes/header.jsp" flush="true" />
 
         <div class="container-fluid px-5 my-3 ">
             <c:if test="${error!=null}">
@@ -63,7 +63,7 @@
             <c:if test="${not empty members}">
 
                 <div class="row my-3 overflow-auto scrollbar-gold">
-                    <table class="table table-dark text-white rounded ">
+                    <table class="table table-dark text-white rounded text-center">
                         <thead>
                             <tr>
                                 <th scope="col">ID</th>
@@ -96,7 +96,7 @@
                     <div class="text-center glow-white my-5">NO MEMBER EXISTS</div>
                 </c:if>
         </div>
-        <jsp:include page="../../../includes/footer.jsp" flush="true" />
+        <jsp:include page="../../includes/footer.jsp" flush="true" />
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
     </body>

@@ -50,28 +50,33 @@ public class EditBookingServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
-        
+
         User userSession = (User) session.getAttribute("user");
-        
-        
-        
+
         if (!Utils.authorizeUser(request, response, "member")) {
             response.sendError(401, "Unauthorized.");
             return;
         }
 
-//            TEMPORARY USER AND BOOKING ID
         int member_id = userSession.getId();
         int booking_id = Integer.parseInt(request.getParameter("bookingId"));
-        
-        Booking booking = BookingDAO.getBookingById(booking_id, member_id);
-        
-        if(booking.getShowtime().getMovie().getStatus().equalsIgnoreCase("Expired")){
-               response.sendError(501, "Expired movie to be update");
+
+        Booking booking = BookingDAO.getBookingByMemberId(booking_id, member_id);
+
+        String action = request.getParameter("action");
+
+        if (action.equals("edit")) {
+            if (booking.getShowtime().getMovie().getStatus().equalsIgnoreCase("Expired")) {
+                response.sendError(501, "Expired movie to be update");
+            }
+
+            request.setAttribute("booking", booking);
+            request.getRequestDispatcher("WEB-INF/views/booking/edit-booking.jsp").forward(request, response);
+        } else if(action.equals("cancel")) {
+            BookingDAO.cancelBookingByBookingId(booking_id);
+            response.sendRedirect(request.getContextPath()+"/viewBookingHistory");
         }
-        
-        request.setAttribute("booking", booking);
-        request.getRequestDispatcher("WEB-INF/views/booking/edit-booking.jsp").forward(request, response);
+
     }
 
     /**

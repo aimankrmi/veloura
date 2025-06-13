@@ -45,7 +45,7 @@
         </style>
     </head>
     <body>
-        <jsp:include page="../../../includes/header.jsp" flush="true" />
+        <jsp:include page="../../includes/header.jsp" flush="true" />
 
 
         <div class="container-fluid px-5 my-4">
@@ -147,7 +147,7 @@
             </div>
         </div>
 
-        <jsp:include page="../../../includes/footer.jsp" flush="true" />
+        <jsp:include page="../../includes/footer.jsp" flush="true" />
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
     </body>

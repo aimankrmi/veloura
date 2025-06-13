@@ -4,10 +4,16 @@
  */
 package com.velouracinema.controller.user;
 
+import com.velouracinema.dao.movie.MovieDAO;
+import com.velouracinema.dao.movie.TopMovieDAO;
+import com.velouracinema.model.Movie;
+import com.velouracinema.model.TopMovie;
 import com.velouracinema.model.User;
 import com.velouracinema.util.Utils;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -31,25 +37,8 @@ public class StaffServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession();
+        staffDashboard(request, response);
 
-        User user = (User) session.getAttribute("user");
-
-        if (!Utils.authorizeUser(request, response, "staff")) {
-            response.sendError(401);
-            return;
-        }
-        
-        request.setAttribute("staff", user);
-        request.getRequestDispatcher("WEB-INF/views/staff/staff-dashboard.jsp").forward(request, response);
-
-//        if (user==null || user.getRole() == null) {
-//        } else {
-//            if (user.getRole().equalsIgnoreCase("staff")) {
-//            } else {
-//                response.sendError(401);
-//            }
-//        }
     }
 
 // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -91,4 +80,25 @@ public class StaffServlet extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
+    
+    public void staffDashboard(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException{
+        HttpSession session = request.getSession();
+
+        User user = (User) session.getAttribute("user");
+
+        if (!Utils.authorizeUser(request, response, "staff")) {
+            response.sendError(401);
+            return;
+        }
+        List<TopMovie> topMovies = new ArrayList<>();
+        topMovies = TopMovieDAO.getAllTopMovie();
+        List<Movie> movies = new ArrayList<>();
+        movies = MovieDAO.getAllMovies();
+        request.setAttribute("movies", movies);
+        request.setAttribute("topMovies", topMovies);
+        request.setAttribute("staff", user);
+        request.getRequestDispatcher("WEB-INF/views/staff/staff-dashboard.jsp").forward(request, response);
+    }
+    
 }

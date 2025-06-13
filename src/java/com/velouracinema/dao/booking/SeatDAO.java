@@ -79,7 +79,19 @@ public class SeatDAO {
         return seats;
 
     }
+// 1. Set seats as available
+    public static void setAvailableSeatsByBookingId(int bookingId){
+        String updateSeats = "UPDATE seats SET is_available = TRUE WHERE id IN "
+                + "(SELECT seat_id FROM booking_seats WHERE booking_id = ?)";
+        try (Connection conn = DBUtil.getConnection();PreparedStatement seatStmt = conn.prepareStatement(updateSeats)) {
+            seatStmt.setInt(1, bookingId);
+            seatStmt.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(SeatDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
+    }
+    
 //    public static List<Seat> getSeats(int showtimeId) {
 //
 //        List<Seat> seats = new ArrayList();

@@ -5,9 +5,12 @@
 package com.velouracinema.controller.home;
 
 import com.velouracinema.dao.movie.MovieDAO;
+import com.velouracinema.dao.movie.TopMovieDAO;
 import com.velouracinema.model.Movie;
+import com.velouracinema.model.TopMovie;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -31,9 +34,12 @@ public class HomeServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        List<TopMovie> topMovieList = new ArrayList<>();
+        topMovieList = TopMovieDAO.getAllTopMovie();
         List<Movie> movieList = MovieDAO.getAllMovies();
         request.setAttribute("movies", movieList);
-        request.getRequestDispatcher("index.jsp").forward(request, response);
+        request.setAttribute("topMovies", topMovieList);
+        request.getRequestDispatcher("WEB-INF/index.jsp").forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

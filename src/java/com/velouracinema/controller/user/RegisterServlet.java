@@ -12,6 +12,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -30,19 +31,6 @@ public class RegisterServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet RegisterServlet</title>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet RegisterServlet at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -57,7 +45,14 @@ public class RegisterServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.sendRedirect(request.getContextPath()+"/views/user/register.jsp");
+        HttpSession session = request.getSession();
+        
+        if(((User) session.getAttribute("user")).getId()!=0){
+            response.sendRedirect(request.getContextPath());
+            return;
+        }
+        request.getRequestDispatcher("/WEB-INF/views/user/register.jsp").forward(request, response);
+//        response.sendRedirect(request.getContextPath()+"/WEB-INF/views/user/register.jsp");
     }
 
     /**
@@ -91,9 +86,10 @@ public class RegisterServlet extends HttpServlet {
         int status = UserDAO.registerUser(user);
         
         if(status==0){
-            response.sendRedirect(request.getContextPath()+"/views/user/register.jsp?error=Cannot be registered.");
+            
+            response.sendRedirect(request.getContextPath()+"/register?error=Cannot be registered.");
         }else{
-            response.sendRedirect(request.getContextPath()+"/views/user/login.jsp?message=Your account has been registered.");
+            response.sendRedirect(request.getContextPath()+"/login?message=Your account has been registered.");
         }
         
     }

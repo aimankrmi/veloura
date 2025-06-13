@@ -24,7 +24,7 @@ public class Movie implements java.io.Serializable {
     private double price;
     private String imagePath;
     private Date releaseDate;
-    private final int expiredDay = 30;
+    private final int expiredDay = 14;
 
     // Getters and Setters
     public int getMovieId() {
@@ -151,7 +151,7 @@ public class Movie implements java.io.Serializable {
 
         if (today.isBefore(release)) {
             return "Coming Soon";
-        } else if (today.isBefore(release.plusDays(expiredDay))) {
+        } else if (today.isBefore(release.plusDays(expiredDay-1))) {
             return "Ongoing";
         } else {
             return "Expired";

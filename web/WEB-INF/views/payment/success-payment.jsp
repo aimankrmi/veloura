@@ -26,7 +26,7 @@
     <body>
         <c:set var="paymentMethod" value="${param.paymentMethod}"/>
         <c:set var="bookingId" value="${param.bookingId}"/>
-        <jsp:include page="../../../includes/header.jsp" />
+        <jsp:include page="../../includes/header.jsp" />
         <div class="container-fluid justify-content-center align-items-center py-4">
             <c:choose>
                 <c:when test="${paymentMethod=='online'}">
@@ -50,6 +50,6 @@
             }, 5000); // 5000 milliseconds = 5 seconds
         </script>
 
-        <jsp:include page="../../../includes/footer.jsp" />
+        <jsp:include page="../../includes/footer.jsp" />
     </body>
 </html>

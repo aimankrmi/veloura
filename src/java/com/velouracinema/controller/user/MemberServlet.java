@@ -7,6 +7,7 @@ package com.velouracinema.controller.user;
 import com.velouracinema.dao.booking.BookingDAO;
 import com.velouracinema.model.Booking;
 import com.velouracinema.model.User;
+import com.velouracinema.util.Utils;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
@@ -38,10 +39,11 @@ public class MemberServlet extends HttpServlet {
         HttpSession session = request.getSession();
         User userSession = (User) session.getAttribute("user");
         
-        if (userSession == null || !userSession.getRole().equalsIgnoreCase("member")) {
+        if(!Utils.authorizeUser(request, response, "member")){
             response.sendError(401);
             return;
         }
+        
 
         if (path.equals("/member")) {
             String error = request.getParameter("error");

@@ -57,6 +57,9 @@ public class Showtime implements java.io.Serializable {
     public String getFormattedShowDate() {
         return Utils.formatDate(this.showDate);
     }
+    public String getFormattedShowTime() {
+        return Utils.formatTime(this.showTime);
+    }
 
     public String getShowDate() {
         return showDate;
@@ -134,7 +137,7 @@ public class Showtime implements java.io.Serializable {
         List<String> formattedShowTimes = new ArrayList();
 
         for (String time : this.getShowTimesByDate()) {
-            formattedShowTimes.add(Utils.formatHours(time));
+            formattedShowTimes.add(Utils.formatTime(time));
         }
         return formattedShowTimes;
     }

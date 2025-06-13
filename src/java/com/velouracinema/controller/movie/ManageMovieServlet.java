@@ -8,20 +8,31 @@ import com.velouracinema.dao.movie.MovieDAO;
 import com.velouracinema.model.Movie;
 import com.velouracinema.model.User;
 import com.velouracinema.util.Utils;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.List;
+import java.util.UUID;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 
 /**
  *
  * @author Aiman
  */
+@MultipartConfig(fileSizeThreshold = 1024 * 1024, // 1MB
+        maxFileSize = 1024 * 1024 * 5, // 5MB
+        maxRequestSize = 1024 * 1024 * 15) // 15MB
 public class ManageMovieServlet extends HttpServlet {
+
+    private final String IMAGE_DIR = "/assets/images";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,6 +49,7 @@ public class ManageMovieServlet extends HttpServlet {
         String path = request.getServletPath();
         String movieIdString;
         String title;
+        String[] genreArr;
         String genre;
         String language;
         String durationString;
@@ -45,14 +57,21 @@ public class ManageMovieServlet extends HttpServlet {
         String priceString;
         String description;
         String imagePath;
+
+        Part image;
+        String imageName;
+        String extension;
+        String uniqueImageName;
+        String finalImageName;
+        String imageFolder;
+
         int status;
         Movie movie;
 
-        if(!Utils.authorizeUser(request, response, "staff")){
+        if (!Utils.authorizeUser(request, response, "staff")) {
             response.sendError(401);
             return;
         }
-        
 
         switch (path) {
 
@@ -64,19 +83,44 @@ public class ManageMovieServlet extends HttpServlet {
             case "/addMovie":
 
                 title = request.getParameter("movieTitle");
-                genre = String.join(",", request.getParameterValues("genre"));
+                genreArr = request.getParameterValues("genre");
+                genre = (genreArr != null) ? String.join(", ", genreArr) : "";
                 language = request.getParameter("language");
                 durationString = request.getParameter("duration");
                 releaseDateString = request.getParameter("releaseDate");
                 priceString = request.getParameter("price");
                 description = request.getParameter("description");
-                imagePath = request.getParameter("imagePath");
 
-                movie = new Movie();
+                image = request.getPart("image");
+                imageName = image.getSubmittedFileName();
+                extension = imageName.substring(imageName.lastIndexOf(".")); // e.g. ".jpg"
+
+                uniqueImageName = System.currentTimeMillis() + "_" + UUID.randomUUID() + extension;
+
+                imageFolder = getServletContext().getRealPath(IMAGE_DIR);
+                imagePath = imageFolder + File.separator + uniqueImageName;
+                System.out.println("Saving image to: " + imagePath);
+                File imageDir = new File(imageFolder);
+                if (!imageDir.exists()) {
+                    imageDir.mkdirs(); // create if doesn't exist
+                }
+//                    SAVE IMAGE TO FILE
+                try (
+                        InputStream is = image.getInputStream(); FileOutputStream fos = new FileOutputStream(imagePath)) {
+                    byte[] buffer = new byte[1024];
+                    int bytesRead;
+                    while ((bytesRead = is.read(buffer)) != -1) {
+                        fos.write(buffer, 0, bytesRead);
+                    }
+                }
+
                 try {
+
                     int duration = Integer.parseInt(durationString);
+
                     double price = Double.parseDouble(priceString);
 
+                    movie = new Movie();
                     movie.setTitle(title);
                     movie.setGenre(genre);
                     movie.setLanguage(language);
@@ -84,7 +128,7 @@ public class ManageMovieServlet extends HttpServlet {
                     movie.setReleaseDateFromString(releaseDateString);
                     movie.setPrice(price);
                     movie.setDescription(description);
-                    movie.setImagePath(imagePath);
+                    movie.setImagePath(uniqueImageName);
                     status = MovieDAO.insertMovie(movie);
                     if (status == 0) {
                         System.out.println("MOVIE INSERT FAILED");
@@ -92,7 +136,8 @@ public class ManageMovieServlet extends HttpServlet {
                         System.out.println("MOVIE INSERT SUCCESS");
                     }
                     response.sendRedirect(request.getContextPath() + "/viewMovies");
-                } catch (Exception e) {
+                } catch (IOException | NumberFormatException e) {
+                    e.printStackTrace();
                 }
                 break;
 
@@ -100,13 +145,49 @@ public class ManageMovieServlet extends HttpServlet {
 
                 movieIdString = request.getParameter("movieId");
                 title = request.getParameter("movieTitle");
-                genre = String.join(",", request.getParameterValues("genre"));
+                genreArr = request.getParameterValues("genre");
+                genre = (genreArr != null) ? String.join(", ", genreArr) : "";
                 language = request.getParameter("language");
                 durationString = request.getParameter("duration");
                 releaseDateString = request.getParameter("releaseDate");
                 priceString = request.getParameter("price");
                 description = request.getParameter("description");
-                imagePath = request.getParameter("imagePath");
+//                imagePath = request.getParameter("imagePath");
+                String oldImageName = request.getParameter("oldImage");
+                finalImageName = oldImageName;
+                image = request.getPart("image");
+                imageName = image.getSubmittedFileName();
+
+                imageFolder = getServletContext().getRealPath(IMAGE_DIR);
+                imageDir = new File(imageFolder);
+                if (!imageDir.exists()) {
+                    imageDir.mkdirs(); // create if doesn't exist
+                }
+
+                // If new image uploaded
+                if (imageName != null && !imageName.isEmpty()) {
+                    // Build unique file name with timestamp + UUID
+                    extension = imageName.substring(imageName.lastIndexOf("."));
+                    uniqueImageName = System.currentTimeMillis() + "_" + UUID.randomUUID() + extension;
+
+                    // Save new image
+                    try (InputStream is = image.getInputStream(); FileOutputStream fos = new FileOutputStream(imageFolder + File.separator + uniqueImageName)) {
+
+                        byte[] buffer = new byte[1024];
+                        int bytesRead;
+                        while ((bytesRead = is.read(buffer)) != -1) {
+                            fos.write(buffer, 0, bytesRead);
+                        }
+                    }
+
+                    // Delete old image file if exists
+                    File oldFile = new File(imageFolder + File.separator + oldImageName);
+                    if (oldFile.exists()) {
+                        oldFile.delete();
+                    }
+
+                    finalImageName = uniqueImageName;
+                }
 
                 movie = new Movie();
                 try {
@@ -121,7 +202,7 @@ public class ManageMovieServlet extends HttpServlet {
                     movie.setReleaseDateFromString(releaseDateString);
                     movie.setPrice(price);
                     movie.setDescription(description);
-                    movie.setImagePath(imagePath);
+                    movie.setImagePath(finalImageName);
 
                     status = MovieDAO.updateMovie(movie);
 

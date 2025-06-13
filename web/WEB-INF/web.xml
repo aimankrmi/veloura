@@ -24,10 +24,6 @@
         <servlet-class>com.velouracinema.controller.payment.PaymentServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>MovieServlet</servlet-name>
-        <servlet-class>com.velouracinema.controller.movie.MovieServlet</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>EditBookingServlet</servlet-name>
         <servlet-class>com.velouracinema.controller.booking.EditBookingServlet</servlet-class>
     </servlet>
@@ -87,6 +83,18 @@
         <servlet-name>ManageMemberServlet</servlet-name>
         <servlet-class>com.velouracinema.controller.user.ManageMemberServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>TopMovieServlet</servlet-name>
+        <servlet-class>com.velouracinema.controller.movie.TopMovieServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SupportServlet</servlet-name>
+        <servlet-class>com.velouracinema.controller.support.SupportServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>EmailServlet</servlet-name>
+        <servlet-class>com.velouracinema.controller.EmailServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>StaffDao</servlet-name>
         <url-pattern>/StaffDao</url-pattern>
@@ -103,16 +111,12 @@
         <servlet-name>PaymentServlet</servlet-name>
         <url-pattern>/payment</url-pattern>
     </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>MovieServlet</servlet-name>
-        <url-pattern>/movies</url-pattern>
-    </servlet-mapping>
     <error-page>
         <error-code>409</error-code>
-        <location>/views/error/409.jsp</location>
+        <location>/WEB-INF/views/error/409.jsp</location>
     </error-page>
     <!--    <error-page>
-        <location>/views/error/error.jsp</location>
+        <location>WEB-INF/views/error/error.jsp</location>
     </error-page>-->
     <servlet-mapping>
         <servlet-name>EditBookingServlet</servlet-name>
@@ -183,6 +187,22 @@
         <url-pattern>/addMember</url-pattern>
         <url-pattern>/updateMember</url-pattern>
         <url-pattern>/deleteMember</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>TopMovieServlet</servlet-name>
+        <url-pattern>/updateTopMovie</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SupportServlet</servlet-name>
+        <url-pattern>/viewSupport</url-pattern>
+        <url-pattern>/updateSupport</url-pattern>
+        <url-pattern>/submitSupport</url-pattern>
+        <url-pattern>/deleteSupport</url-pattern>
+        <url-pattern>/support</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>EmailServlet</servlet-name>
+        <url-pattern>/email</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

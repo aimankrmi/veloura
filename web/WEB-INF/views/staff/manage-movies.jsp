@@ -34,7 +34,7 @@
     </head>
     <body>
 
-        <jsp:include page="../../../includes/header.jsp" flush="true" />
+        <jsp:include page="../../includes/header.jsp" flush="true" />
 
         <div class="container-fluid px-5 my-3 ">
             <div class="row ">
@@ -60,7 +60,7 @@
                             </button>
 
                             <!-- Modal -->
-                            <form action="${pageContext.request.contextPath}/addMovie" method="POST" >
+                            <form action="${pageContext.request.contextPath}/addMovie" method="POST" enctype="multipart/form-data">
                                 <div class="modal fade" id="addMovieModal" tabindex="-1"
                                      aria-labelledby="addMovieModalLabel" aria-hidden="true">
                                     <div class="modal-dialog model-dialog-centered modal-dialog-scrollable scrollbar-gold">
@@ -142,11 +142,16 @@
                                                 <br>
                                                 <!-- MOVIE IMAGE PATH -->
                                                 <div class="mb-3">
+                                                    <!--                                                    <label for="movieImagePathFormControlInput1"
+                                                                                                               class="form-label">Image Path
+                                                                                                        </label>
+                                                                                                        <input type="text" class="form-control bg-dark text-white"
+                                                                                                               id="movieImagePathFormControlInput1" name="imagePath" required>-->
                                                     <label for="movieImagePathFormControlInput1"
-                                                           class="form-label">Image Path
+                                                           class="form-label">Image
                                                     </label>
-                                                    <input type="text" class="form-control bg-dark text-white"
-                                                           id="movieImagePathFormControlInput1" name="imagePath" required>
+                                                    <input type="file" class="form-control bg-dark text-white"
+                                                           id="movieImagePathFormControlInput1" name="image" required>
                                                 </div>
 
                                                 <br>
@@ -219,7 +224,7 @@
                                         </button>
 
                                         <!-- Modal -->
-                                        <form action="${pageContext.request.contextPath}/editMovie" method="POST" >
+                                        <form action="${pageContext.request.contextPath}/editMovie" method="POST"  enctype="multipart/form-data">
                                             <input type="hidden" name="movieId" value="${movie.movieId}">
                                             <div class="modal fade" id="editMovie${movie.movieId}Modal" tabindex="-1"
                                                  aria-labelledby="editMovie${movie.movieId}ModalLabel" aria-hidden="true">
@@ -257,7 +262,6 @@
                                                                     </div>
                                                                 </c:forTokens>
                                                             </div>
-                                                            <br>
                                                             <!-- Language -->
                                                             <div class="mb-3">
                                                                 <label class="form-label">Language</label>
@@ -272,7 +276,6 @@
                                                                 </c:forTokens>
 
                                                             </div>
-                                                            <br>
                                                             <!-- MOVIE DURATION -->
                                                             <div class="mb-3">
                                                                 <label for="movieDurationFormControlInput1" class="form-label">
@@ -281,7 +284,6 @@
                                                                        max="240" id="movieDurationFormControlInput1"value="<c:out value='${movie.duration}'/>" required>
                                                             </div>
 
-                                                            <br>
                                                             <!-- MOVIE PRICE -->
                                                             <div class="mb-3">
                                                                 <label for="moviePriceFormControlInput1" class="form-label">
@@ -290,9 +292,7 @@
                                                                        step="0.01" id="moviePriceFormControlInput1" value="<c:out value='${movie.price}'/>" required>
                                                             </div>
 
-                                                            <br>
 
-                                                            <br>
                                                             <!-- MOVIE DESCRIPTION -->
                                                             <div class="mb-3">
                                                                 <label for="descriptionFormControlTextarea1"
@@ -301,14 +301,19 @@
                                                                           name="description"  rows="3"><c:out value='${movie.description}'/></textarea>
                                                             </div>
 
-                                                            <br>
                                                             <!-- MOVIE IMAGE PATH -->
                                                             <div class="mb-3">
+                                                                <!--                                                                <label for="movieImagePathFormControlInput1"
+                                                                                                                                       class="form-label">Image Path
+                                                                                                                                </label>
+                                                                                                                                <input type="text" class="form-control bg-dark text-white"
+                                                                                                                                       id="movieImagePathFormControlInput1" value="<c:out value='${movie.imagePath}'/>" name="imagePath" required>-->
+                                                                <input type="hidden"  name="oldImage" value="<c:out value='${movie.imagePath}'/>">
                                                                 <label for="movieImagePathFormControlInput1"
-                                                                       class="form-label">Image Path
+                                                                       class="form-label">Image
                                                                 </label>
-                                                                <input type="text" class="form-control bg-dark text-white"
-                                                                       id="movieImagePathFormControlInput1" value="<c:out value='${movie.imagePath}'/>" name="imagePath" required>
+                                                                <input type="file" class="form-control bg-dark text-white"
+                                                                       id="movieImagePathFormControlInput1" name="image" >
                                                             </div>
 
                                                             <br>
@@ -358,7 +363,7 @@
         </div>
 
 
-        <jsp:include page="../../../includes/footer.jsp" flush="true" />
+        <jsp:include page="../../includes/footer.jsp" flush="true" />
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
         <script type="text/javascript">

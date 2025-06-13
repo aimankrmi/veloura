@@ -71,10 +71,9 @@ public class MovieDAO {
             Logger.getLogger(MovieDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        System.out.println(movie.getReleaseDate());
         if (status != 0) {
             LocalDate releaseDate = movie.getReleaseDate().toLocalDate();
-            LocalDate endDate = releaseDate.plusMonths(1);
+            LocalDate endDate = releaseDate.plusDays(13);
 
             for (LocalDate date = releaseDate; !date.isAfter(endDate); date = date.plusDays(1)) {
 
@@ -246,51 +245,7 @@ public class MovieDAO {
         return price;
     }
 
-    public static List<String> getFormattedMovieDateById(int id) {
-        String sql = "SELECT DISTINCT show_date FROM showtimes WHERE movie_id = ?";
-        List<String> movieShowdatesList = new ArrayList<>();
-        String movieDateString = "";
-        try (Connection conn = DBUtil.getConnection();) {
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setInt(1, id);
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                movieShowdatesList.add(Utils.formatDate(rs.getString(1)));
 
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return movieShowdatesList;
-    }
-
-    public static List<Movie> getMoviesByStatus(String status) {
-        List<Movie> movies = new ArrayList<>();
-        String sql = status.equalsIgnoreCase("now")
-                ? "SELECT * FROM movies WHERE release_date <= CURDATE()"
-                : "SELECT * FROM movies WHERE release_date > CURDATE()";
-
-        try (Connection conn = DBUtil.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
-
-            while (rs.next()) {
-                Movie movie = new Movie();
-                movie.setMovieId(rs.getInt("id"));
-                movie.setTitle(rs.getString("title"));
-                movie.setGenre(rs.getString("genre"));
-                movie.setLanguage(rs.getString("language"));
-                movie.setDuration(rs.getInt("duration"));
-                movie.setReleaseDate(rs.getDate("release_date"));
-                movie.setDescription(rs.getString("description"));
-                movie.setPrice(rs.getFloat("price"));
-                movie.setImagePath(rs.getString("image_path"));
-                movies.add(movie);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return movies;
-    }
 
     public static List<Integer> getMovieIds() {
         String sql = "SELECT id FROM movies WHERE release_date >= CURRENT_DATE - INTERVAL 1 MONTH";
@@ -306,5 +261,8 @@ public class MovieDAO {
 
         return ids;
     }
+    
+   
+    
 
 }

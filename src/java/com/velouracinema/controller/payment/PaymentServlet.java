@@ -5,6 +5,7 @@
 package com.velouracinema.controller.payment;
 
 import com.velouracinema.dao.booking.BookingDAO;
+import com.velouracinema.dao.booking.BookingSeatDAO;
 import com.velouracinema.dao.movie.MovieDAO;
 import com.velouracinema.dao.payment.PaymentDAO;
 import com.velouracinema.dao.booking.SeatDAO;
@@ -33,31 +34,6 @@ import javax.servlet.http.HttpSession;
  */
 public class PaymentServlet extends HttpServlet {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet PaymentController</title>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet PaymentController at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
-    }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the
     // + sign on the left to edit the code.">
@@ -73,21 +49,22 @@ public class PaymentServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        String path = request.getServletPath();
-        if ("/payment".equals(path)) {
-
-            String formToken = request.getParameter("bookingToken");
-            HttpSession session = request.getSession();
-
-            String sessionToken = (String) session.getAttribute("bookingToken");
-            Long tokenTime = (Long) session.getAttribute("bookingTokenTime");
-
-            if (sessionToken == null || !sessionToken.equals(formToken) || tokenTime == null) {
-                response.sendError(409, "Duplicate or expired booking token.");
-                return;
-            }
-        }
-        processRequest(request, response);
+        response.sendError(401);
+        
+//        String path = request.getServletPath();
+//        if ("/payment".equals(path)) {
+//
+//            String formToken = request.getParameter("bookingToken");
+//            HttpSession session = request.getSession();
+//
+//            String sessionToken = (String) session.getAttribute("bookingToken");
+//            Long tokenTime = (Long) session.getAttribute("bookingTokenTime");
+//
+//            if (sessionToken == null || !sessionToken.equals(formToken) || tokenTime == null) {
+//                response.sendError(409, "Duplicate or expired booking token.");
+//                return;
+//            }
+//        }
     }
 
     /**
@@ -111,26 +88,29 @@ public class PaymentServlet extends HttpServlet {
         request.setAttribute("time", time);
 
         User user = (User) session.getAttribute("user");
-
         // Check if the user has logged in or not AND to check if the user is not a member (staff/admin) cannot book
-        if (user.getId() == 0 || !user.getRole().equalsIgnoreCase("member")) {
-            String message;
-            String uri = request.getRequestURI();
-            String query = request.getQueryString();
-            String redirectURL = uri + (query != null ? "?" + query : "");
-
-            // Store in session
-            request.getSession().setAttribute("redirectAfterLogin", redirectURL);
-
-            if (!user.getRole().equalsIgnoreCase("member")) {
-//                message = "You need to be a member to book ticket.";
+        if(!Utils.authorizeUser(request, response, "member")){
                 response.sendRedirect(request.getContextPath() + "/logout");
-            } else {
-                message = "Please login first";
-                response.sendRedirect(request.getContextPath() + "/login?message=" + message);
-            }
-            return;
-        } 
+                return;
+        }
+
+//        if (user.getId() == 0 || !user.getRole().equalsIgnoreCase("member")) {
+//            String message;
+//            String uri = request.getRequestURI();
+//            String query = request.getQueryString();
+//            String redirectURL = uri + (query != null ? "?" + query : "");
+//
+//            // Store in session
+//            request.getSession().setAttribute("redirectAfterLogin", redirectURL);
+//
+//            if (!user.getRole().equalsIgnoreCase("member")) {
+////                message = "You need to be a member to book ticket.";
+//            } else {
+//                message = "Please login first";
+//                response.sendRedirect(request.getContextPath() + "/login?message=" + message);
+//            }
+//            return;
+//        } 
 
         String formToken = request.getParameter("bookingToken");
 
@@ -177,7 +157,7 @@ public class PaymentServlet extends HttpServlet {
             seatId = SeatDAO.getSeatId(showtimeId, seat);
             SeatDAO.changeStatusById(seatId);
             seatsBooked.add(SeatDAO.getSeatById(seatId));
-            BookingDAO.insertBookedSeat(bookingId, seatId);
+            BookingSeatDAO.insertBookedSeat(bookingId, seatId);
             totalAmount += MovieDAO.getMoviePriceById(movieId);
         }
 

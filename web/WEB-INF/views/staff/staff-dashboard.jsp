@@ -26,7 +26,7 @@
         <link rel="stylesheet" href="assets/css/footer.css"/>
     </head>
     <body>
-        <jsp:include page="../../../includes/header.jsp" flush="true"/>
+        <jsp:include page="../../includes/header.jsp" flush="true"/>
 
 
         <div class="container py-5">
@@ -41,7 +41,7 @@
                 </div>
             </c:if>
             <h1 class="glow-gold display-4 mb-4" style="text-align: left;">Staff Dashboard</h1>
-            <p class="lead">Welcome, <strong>Staff</strong>! Here's your workspace.</p>
+            <p class="lead">Welcome, <strong><c:out value="${staff.name}"/></strong> ! <br>Here's your workspace.</p>
             <div class="row g-4 mt-4">
                 <!-- Card: Review Payments -->
                 <div class="col-md-4">
@@ -66,6 +66,68 @@
                         </div>
                     </div>
                 </div>
+                <!-- Card: Manage Movies -->
+                <div class="col-md-4">
+                    <div class="card text-bg-dark h-100 shadow-lg rounded-4">
+                        <div class="card-body text-center">
+                            <i class="fas fa-film fa-3x mb-3 text-warning"></i>
+                            <h5 class="card-title">Manage Top Movies</h5>
+                            <p class="card-text">Edit top movie listings.</p>
+
+                            <!-- Button trigger modal -->
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#topMovieModal">
+                                Manage Top Movies
+                            </button>
+
+                            <!-- Modal -->
+                            <form action="${pageContext.request.contextPath}/updateTopMovie" method="POST">
+
+                                <div class="modal fade" id="topMovieModal" tabindex="-1" aria-labelledby="topMovieModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content bg-dark text-white">
+                                            <div class="modal-header">
+                                                <h1 class="modal-title fs-5" id="topMovieModalLabel">Top Movies</h1>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <c:if test="${empty topMovies}">
+                                                    <div class="text-center glow-white">Not Sorted Yet</div>
+                                                </c:if>
+                                                <c:forEach begin="1" end="10" step="1" varStatus="status">
+                                                    <input type="hidden" name="position${status.index}" value="${status.index}">
+                                                    <div class="form-floating mb-3">
+                                                        <select name="topMovie${status.index}" class="form-select" id="floatingSelect" aria-label="Floating label select example">
+                                                            <c:forEach items="${movies}" var="movie" > 
+                                                                <c:if test="${movie.status != expired}">
+                                                                    <option value="${movie.movieId}" 
+                                                                            <c:forEach items="${topMovies}" var="topMovie">
+                                                                                <c:if test="${(topMovie.movieId == movie.movieId) && (status.index == topMovie.position)}">
+                                                                                    selected
+                                                                                </c:if>
+                                                                            </c:forEach>
+                                                                            ><c:out value="${movie.title}"/></option>
+                                                                </c:if>
+                                                            </c:forEach>
+                                                        </select>
+                                                        <label for="floatingSelect">Top ${status.index}</label>
+                                                    </div>
+
+                                                </c:forEach>
+
+
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                <input class="btn btn-primary" type="submit" value="Save changes">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
 
                 <!-- View Support Requests -->
                 <div class="col-md-4">
@@ -74,7 +136,7 @@
                             <i class="fas fa-headset fa-3x mb-3 text-warning"></i>
                             <h5 class="card-title">Support Requests</h5>
                             <p class="card-text">Check tickets submitted by users.</p>
-                            <a href="viewSupport.jsp" class="btn btn-warning text-dark rounded-pill mt-3 px-4">Go</a>
+                            <a href="${pageContext.request.contextPath}/viewSupport" class="btn btn-warning text-dark rounded-pill mt-3 px-4">Go</a>
                         </div>
                     </div>
                 </div>
@@ -146,8 +208,6 @@
                                                            id="staffPhoneNoFormControlInput" name="staffPhoneNo" value="<c:out value='${staff.phoneNo}'/>" required>
                                                 </div>
 
-
-
                                             </div>
                                             <div class="modal-footer">
                                                 <input type="submit" class="btn btn-primary" value="Save changes">
@@ -161,9 +221,10 @@
                     </div>
                 </div>
             </div>
+
         </div>
 
-        <jsp:include page="../../../includes/footer.jsp" flush="true"/>
+        <jsp:include page="../../includes/footer.jsp" flush="true"/>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>

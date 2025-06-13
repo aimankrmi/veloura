@@ -71,10 +71,10 @@ public class BookingServlet extends HttpServlet {
             
             
             //  response.sendRedirect(request.getContextPath()+"/views/booking.jsp");
-            request.getRequestDispatcher("views/booking/booking.jsp").forward(request, response);
+            request.getRequestDispatcher("WEB-INF/views/booking/booking.jsp").forward(request, response);
 
         } catch (NumberFormatException e) {
-            response.sendRedirect(request.getContextPath()+"/index.jsp");
+            response.sendRedirect(request.getContextPath());
         }
 
     }

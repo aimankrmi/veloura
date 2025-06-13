@@ -120,7 +120,6 @@ public class ManageStaffServlet extends HttpServlet {
                     return;
                 }
             }
-            System.out.println("DALAM manageStaffServ: Pass = " + password);
             User staff = new User();
             staff.setId(id);
             staff.setName(name);
@@ -143,7 +142,7 @@ public class ManageStaffServlet extends HttpServlet {
 
         } else if (path.equals("/deleteStaff")) {
 
-            if (!Utils.authorizeUser(request, response, "staff") && !Utils.authorizeUser(request, response, "admin")) {
+            if (!Utils.authorizeUser(request, response, "admin")) {
                 response.sendError(401);
                 return;
             }

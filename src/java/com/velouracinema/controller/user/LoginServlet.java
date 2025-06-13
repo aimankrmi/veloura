@@ -25,20 +25,6 @@ import javax.servlet.http.HttpSession;
  */
 public class LoginServlet extends HttpServlet {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-       
-    }
-
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
@@ -53,23 +39,53 @@ public class LoginServlet extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
-        if (user == null) {
-            response.sendRedirect(request.getContextPath());
-            return;
-        } else {
-            if (user.getId() != 0) {
-                response.sendRedirect(request.getContextPath());
-                return;
-            }
+//        if (user == null) {
+//        System.out.println("USER ID: "+ user.getId());
+//            response.sendRedirect(request.getContextPath());
+//            return;
+//        } else {
+//            if (user.getId() != 0) {
+//                response.sendRedirect(request.getContextPath());
+//                return;
+//            }
+//        }
+        String time = request.getParameter("time-show") != null ? request.getParameter("time-show") : "";
+        String date = request.getParameter("date-show") != null ? request.getParameter("date-show") : "";
+        String movieId = request.getParameter("movieId") != null ? request.getParameter("movieId") : "";
+        System.out.println("HELO");
+            System.out.println(date);
+            System.out.println(time);
+            System.out.println(movieId);
+        if (!date.equals("") && !time.equals("") && !movieId.equals("")) {
+        System.out.println("HELO2");
+            request.setAttribute("movieId", movieId);
+            request.setAttribute("time", time);
+            request.setAttribute("date", date);
         }
-//        
+        
         if (request.getParameter("error") != null) {
             request.setAttribute("error", request.getParameter("error"));
         }
         if (request.getParameter("message") != null) {
             request.setAttribute("message", request.getParameter("message"));
         }
-        response.sendRedirect(request.getContextPath() + "/views/user/login.jsp");
+
+        if (user == null || user.getId() == 0) {
+        System.out.println("HELO3");
+            request.getRequestDispatcher("WEB-INF/views/user/login.jsp").forward(request, response);
+        } else {
+            // Redirect user based on role
+            if ("admin".equalsIgnoreCase(user.getRole())) {
+                response.sendRedirect(request.getContextPath() + "/admin");
+            } else if ("staff".equalsIgnoreCase(user.getRole())) {
+                response.sendRedirect(request.getContextPath() + "/staff");
+            } else if ("member".equalsIgnoreCase(user.getRole())) {
+                response.sendRedirect(request.getContextPath() + "/member"); // default for member 
+            } else {
+                String error = "User does not exists";
+                response.sendRedirect(request.getContextPath() + "/login?error=" + error);
+            }
+        }
     }
 
     /**
@@ -83,33 +99,35 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+        
+        User user = new User();
         String username = request.getParameter("username");
-        String password = Utils.SHA256Hash(request.getParameter("password"));
-        System.out.println("Hashed PASS: " + password);
-        User user = UserDAO.getUser(username, password);
-        boolean urlRedirect = Boolean.parseBoolean(request.getParameter("urlRedirect"));
-        String time = request.getParameter("time-show");
-        String date = request.getParameter("date-show");
-        String movieId = request.getParameter("movieId");
+        
+        if (username != null) {
+            String password = Utils.SHA256Hash(request.getParameter("password"));
+            user = UserDAO.getUser(username, password);
+        }
+
+//        boolean urlRedirect = Boolean.parseBoolean(request.getParameter("urlRedirect"));
+        String time = request.getParameter("time-show") != null ? request.getParameter("time-show") : "";
+        String date = request.getParameter("date-show") != null ? request.getParameter("date-show") : "";
+        String movieId = request.getParameter("movieId") != null ? request.getParameter("movieId") : "";
+
         if (user.getId() == 0) {
 
             if (!date.equals("") && !time.equals("") && !movieId.equals("")) {
-                request.setAttribute("movieId", movieId);
-                request.setAttribute("time", time);
-                request.setAttribute("date", date);
                 String message = "Please login first";
-                request.getRequestDispatcher("views/user/login.jsp?message=" + message).forward(request, response);
+                response.sendRedirect(request.getContextPath() + "/login?message=" + message+"&time-show="+time+"&date-show="+date+"&movieId="+movieId);
             } else {
                 String error = "User does not exists";
-                response.sendRedirect(request.getContextPath() + "/views/user/login.jsp?error=" + error);
+                response.sendRedirect(request.getContextPath() + "/login?error=" + error);
             }
         } else {
 
             HttpSession session = request.getSession();
 
             session.setAttribute("user", user);
-            
+
             // Redirect user based on role
             if ("admin".equalsIgnoreCase(user.getRole())) {
                 response.sendRedirect(request.getContextPath() + "/admin");
@@ -120,7 +138,6 @@ public class LoginServlet extends HttpServlet {
                     response.sendRedirect(request.getContextPath() + "/booking?id=" + movieId + "&date=" + date + "&time=" + time);
                     return;
                 }
-                System.out.println("LOGGED IN");
                 response.sendRedirect(request.getContextPath() + "/member"); // default for member 
             } else {
                 String error = "User does not exists";

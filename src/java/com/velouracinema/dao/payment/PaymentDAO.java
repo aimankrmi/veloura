@@ -144,6 +144,15 @@ public class PaymentDAO {
         return status;
     }
     
-    
+//    Delete related payment
+    public static void deletePayment(int bookingId){
+        String deletePayment = "DELETE FROM payments WHERE booking_id = ?";
+        try (Connection conn = DBUtil.getConnection(); PreparedStatement payStmt = conn.prepareStatement(deletePayment)) {
+            payStmt.setInt(1, bookingId);
+            payStmt.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(PaymentDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
 }

@@ -10,7 +10,10 @@ import com.velouracinema.model.Payment;
 import com.velouracinema.model.Seat;
 import com.velouracinema.util.DBUtil;
 import java.sql.*;
+import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -61,7 +64,7 @@ public class BookingDAO {
         return bookings;
     }
 
-    public static Booking getBookingById(int bookingId, int memberId) {
+    public static Booking getBookingByMemberId(int bookingId, int memberId) {
         String sql = "SELECT * FROM bookings WHERE id = ? AND member_id = ?";
         Connection conn = null;
         Booking booking = new Booking();
@@ -83,11 +86,42 @@ public class BookingDAO {
             }
             booking.setPayment(PaymentDAO.getPaymentByBookingId(bookingId));
             List<Seat> seats = new ArrayList<>();
-            for (Integer seatId : BookingDAO.getBookedSeatByBooking(bookingId)) {
+            for (Integer seatId : BookingSeatDAO.getBookedSeatByBooking(bookingId)) {
                 seats.add(SeatDAO.getSeatById(seatId));
             }
             booking.setSeats(seats);
             conn.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(BookingDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return booking;
+
+    }
+
+    public static Booking getBookingById(int bookingId) {
+        String sql = "SELECT * FROM bookings WHERE id = ?";
+        Booking booking = new Booking();
+
+        try (Connection conn = DBUtil.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql);) {
+
+            stmt.setInt(1, bookingId);
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                booking.setId(rs.getInt("id"));
+                booking.setMemberId(rs.getInt("member_id"));
+                booking.setShowtimeId(rs.getInt("showtime_id"));
+                booking.setBookingDate(rs.getTimestamp("booking_date").toLocalDateTime());
+                booking.setStatus(rs.getString("status"));
+
+            }
+            booking.setPayment(PaymentDAO.getPaymentByBookingId(bookingId));
+            List<Seat> seats = new ArrayList<>();
+            for (Integer seatId : BookingSeatDAO.getBookedSeatByBooking(bookingId)) {
+                seats.add(SeatDAO.getSeatById(seatId));
+            }
+            booking.setSeats(seats);
         } catch (SQLException ex) {
             Logger.getLogger(BookingDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -155,27 +189,6 @@ public class BookingDAO {
         return bookingDate;
     }
 
-    // To insert booked seat (edit booking)
-    public static int insertBookedSeat(int bookingId, int seatId) {
-        String sql = "INSERT INTO booking_seats (booking_id, seat_id) VALUES (?, ?)";
-        Connection conn = null;
-        int status = 0;
-
-        try {
-            conn = DBUtil.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setInt(1, bookingId);
-            stmt.setInt(2, seatId);
-
-            status = stmt.executeUpdate();
-
-            conn.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(BookingDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return status;
-    }
-
     // To remove booked seat (edit booking)
     public static int removeBookedSeat(int bookingId, int seatId) {
         String sql = "DELETE FROM booking_seats WHERE booking_id = ? AND seat_id ?";
@@ -195,31 +208,6 @@ public class BookingDAO {
             Logger.getLogger(BookingDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return status;
-    }
-
-    public static List<Integer> getBookedSeatByBooking(int bookingId) {
-        String sql = "SELECT seat_id FROM booking_seats WHERE booking_id = ?";
-
-        List<Integer> bookedSeats = new ArrayList<>();
-
-        Connection conn = null;
-        try {
-            conn = DBUtil.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setInt(1, bookingId);
-
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()) {
-                bookedSeats.add(rs.getInt("seat_id"));
-            }
-
-            conn.close();
-
-        } catch (SQLException ex) {
-            Logger.getLogger(SeatDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return bookedSeats;
     }
 
     // Update booking status to confirm
@@ -266,7 +254,7 @@ public class BookingDAO {
 
                 booking.setPayment(PaymentDAO.getPaymentByBookingId(rs.getInt("id")));
                 List<Seat> seats = new ArrayList<>();
-                for (Integer seatId : BookingDAO.getBookedSeatByBooking(rs.getInt("id"))) {
+                for (Integer seatId : BookingSeatDAO.getBookedSeatByBooking(rs.getInt("id"))) {
                     seats.add(SeatDAO.getSeatById(seatId));
                 }
                 booking.setSeats(seats);
@@ -280,8 +268,9 @@ public class BookingDAO {
         return bookings;
     }
 
-    public static int removeBookedSeatsByBookingId(int bookingId) {
-        String sql = "DELETE FROM booking_seats WHERE booking_id = ?";
+    public static int cancelBookingByBookingId(int bookingId) {
+
+        String sql = "UPDATE bookings SET status = 'cancelled' WHERE id = ?";
 
         int status = 0;
         Connection conn = null;
@@ -298,6 +287,62 @@ public class BookingDAO {
         }
         return status;
 
+    }
+
+    public static void setExpiredBooking(int bookingId) {
+        String updateBooking = "UPDATE bookings SET status = 'expired' WHERE id = ?";
+        try (Connection conn = DBUtil.getConnection(); PreparedStatement bookStmt = conn.prepareStatement(updateBooking)) {
+            bookStmt.setInt(1, bookingId);
+            bookStmt.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(BookingDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public static void removePendingBooking() {
+        try (Connection conn = DBUtil.getConnection()) {
+            String query = "SELECT b.id, b.booking_date, b.status, p.payment_method, p.status as payment_status, s.show_date, s.show_time "
+                    + "FROM bookings b "
+                    + "JOIN showtimes s ON b.showtime_id = s.id "
+                    + "LEFT JOIN payments p ON b.id = p.booking_id "
+                    + "WHERE b.status = 'pending'";
+
+            PreparedStatement stmt = conn.prepareStatement(query);
+            ResultSet rs = stmt.executeQuery();
+            LocalDateTime now = LocalDateTime.now();
+
+            while (rs.next()) {
+                String status = rs.getString("payment_status");
+                int bookingId = rs.getInt("id");
+                LocalDateTime bookingDate = rs.getTimestamp("booking_date").toLocalDateTime();
+                String paymentMethod = rs.getString("payment_method");
+                LocalDate showDate = rs.getObject("show_date", LocalDate.class);
+                LocalTime showTime = rs.getObject("show_time", LocalTime.class);
+                LocalDateTime showDateTime = LocalDateTime.of(showDate, showTime);
+
+                boolean expiredBy15Minutes = Duration.between(bookingDate, now).toMinutes() >= 15;
+                boolean within3HoursToShow = Duration.between(now, showDateTime).toHours() < 3;
+
+                // Expire booking if it's unpaid and 15 minutes have passed
+                if (expiredBy15Minutes) {
+                    System.out.println("SUDAH 15 MINIT BERLALU TANPA PILIH JENIS BAYARAN");
+                    SeatDAO.setAvailableSeatsByBookingId(bookingId);// 1. Set seats as available
+                    PaymentDAO.deletePayment(bookingId);// 2. Delete related payment
+                    setExpiredBooking(bookingId); // 3. Mark booking as expired
+                } // If within 3 hours of showtime and payment method is counter or not chosen, expire it
+                else if (within3HoursToShow && (paymentMethod == null || paymentMethod.equals("counter")) && status.equals("not_paid")) {
+                    System.out.println("BAYAR DI KAUNTER DAN SUDAH KURANG 3 JAM.");
+                    SeatDAO.setAvailableSeatsByBookingId(bookingId);// 1. Set seats as available
+                    PaymentDAO.deletePayment(bookingId);// 2. Delete related payment
+                    setExpiredBooking(bookingId); // 3. Mark booking as expired
+                }
+            }
+
+            conn.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

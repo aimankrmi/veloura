@@ -24,7 +24,7 @@
         <link rel="stylesheet" href="assets/css/footer.css"/>
     </head>
     <body>
-        <jsp:include page="../../../includes/header.jsp" flush="true"/>
+        <jsp:include page="../../includes/header.jsp" flush="true"/>
 
 
         <div class="container py-5">
@@ -49,7 +49,7 @@
                             <i class="fas fa-money-check-alt fa-3x mb-3 text-warning"></i>
                             <h5 class="card-title">Booking History</h5>
                             <p class="card-text">View and edit booking.</p>
-                            <a href="${pageContext.request.contextPath}/viewBookingHistory" class="btn btn-warning text-dark rounded-pill mt-3 px-4">Go</a>
+                            <a href="${pageContext.request.contextPath}/viewBookingHistory" class="btn btn-warning text-dark rounded-pill px-4">Go</a>
                         </div>
                     </div>
                 </div>
@@ -165,7 +165,7 @@
 
         </div>
 
-        <jsp:include page="../../../includes/footer.jsp" flush="true"/>
+        <jsp:include page="../../includes/footer.jsp" flush="true"/>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>
