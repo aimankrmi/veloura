@@ -49,13 +49,25 @@ Overall, the system bridges the gap between traditional cinema experiences and m
 
 ---
 
-## 🧪 Features
+## ✨ Features
 
-- 🎬 View list of all movies with posters
-- 📅 Select available show dates and times
-- 🪑 View available seats per screening
-- 📝 Book tickets 
-- 🔐 Admin login to manage movie listings
+### 🛡️ Admin
+- 🔐 Login with elevated access control  
+- 🎬 Manage movie listings (add/edit/delete)  
+- 📅 Configure showtimes and assign screens  
+- 📊 Manage staff information  
+
+### 🧑‍💼 Staff
+- 🗓️ Update movie details  
+- 📥 Assist with pay at counter ticket bookings  
+
+### 🎟️ Customer
+- 🎥 Browse movie catalog with posters and descriptions
+- ⏰ View available showtimes and durations
+- 🪑 Select and reserve seats in real-time
+- 💳 Book tickets securely 
+- 🔄 Edit seat bookings after payment (only if more than 3 hours before showtime)
+- ✉️ View confirmation details (optional email or on-screen)
 
 ---
 
