@@ -82,13 +82,13 @@ Overall, the system bridges the gap between traditional cinema experiences and m
    - File → Open Project → Select ``veloura``
 
 3. **Import Dependencies**
-   Ensure the following libraries are added to your project:
-     ```
-     - JSTL.jar
-     - [mysql-connector-j-9.2.0.jar](https://dev.mysql.com/downloads/file/?id=538917)
-     - [javax.mail.jar](https://github.com/javaee/javamail/releases/download/JAVAMAIL-1_6_2/javax.mail.jar)
-     - [activation.jar](https://repo1.maven.org/maven2/javax/activation/activation/1.1/activation-1.1.jar)
-      ```
+ Ensure the following libraries are added to your project:
+
+- `JSTL.jar`
+- [`mysql-connector-j-9.2.0.jar`](https://dev.mysql.com/downloads/file/?id=538917)
+- [`javax.mail.jar`](https://github.com/javaee/javamail/releases/download/JAVAMAIL-1_6_2/javax.mail.jar)
+- [`activation.jar`](https://repo1.maven.org/maven2/javax/activation/activation/1.1/activation-1.1.jar)
+
 4. **Configure MySQL database:**
    - Create a database: ``cinema_db``
    - Run the SQL dump: filename.sql db/filename.sql to create tables and sample data.
