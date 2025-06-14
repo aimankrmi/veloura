@@ -8,11 +8,6 @@ import com.velouracinema.dao.user.UserDAO;
 import com.velouracinema.model.User;
 import com.velouracinema.util.Utils;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -39,25 +34,12 @@ public class LoginServlet extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
-//        if (user == null) {
-//        System.out.println("USER ID: "+ user.getId());
-//            response.sendRedirect(request.getContextPath());
-//            return;
-//        } else {
-//            if (user.getId() != 0) {
-//                response.sendRedirect(request.getContextPath());
-//                return;
-//            }
-//        }
+
         String time = request.getParameter("time-show") != null ? request.getParameter("time-show") : "";
         String date = request.getParameter("date-show") != null ? request.getParameter("date-show") : "";
         String movieId = request.getParameter("movieId") != null ? request.getParameter("movieId") : "";
-        System.out.println("HELO");
-            System.out.println(date);
-            System.out.println(time);
-            System.out.println(movieId);
+
         if (!date.equals("") && !time.equals("") && !movieId.equals("")) {
-        System.out.println("HELO2");
             request.setAttribute("movieId", movieId);
             request.setAttribute("time", time);
             request.setAttribute("date", date);
@@ -71,7 +53,6 @@ public class LoginServlet extends HttpServlet {
         }
 
         if (user == null || user.getId() == 0) {
-        System.out.println("HELO3");
             request.getRequestDispatcher("WEB-INF/views/user/login.jsp").forward(request, response);
         } else {
             // Redirect user based on role
@@ -146,15 +127,5 @@ public class LoginServlet extends HttpServlet {
         }
 
     }
-
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
 
 }

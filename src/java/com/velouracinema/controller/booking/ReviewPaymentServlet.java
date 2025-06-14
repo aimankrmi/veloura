@@ -5,10 +5,13 @@
 package com.velouracinema.controller.booking;
 
 import com.velouracinema.dao.booking.BookingDAO;
+import com.velouracinema.dao.booking.ShowtimeDAO;
 import com.velouracinema.model.Booking;
+import com.velouracinema.model.Showtime;
 import com.velouracinema.util.Utils;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -20,30 +23,6 @@ import javax.servlet.http.HttpServletResponse;
  * @author Aiman
  */
 public class ReviewPaymentServlet extends HttpServlet {
-
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        
-        if(!Utils.authorizeUser(request, response, "staff")){
-            response.sendError(401);
-            return;
-        }
-        
-        List<Booking> bookings = BookingDAO.getAllBookings();
-        
-        request.setAttribute("bookings", bookings);
-        
-        request.getRequestDispatcher("WEB-INF/views/payment/review-payment.jsp").forward(request, response);
-    }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -57,31 +36,21 @@ public class ReviewPaymentServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
-    }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
-    }
+        if (!Utils.authorizeUser(request, response, "staff")) {
+            response.sendError(401);
+            return;
+        }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
+        List<Booking> bookings = BookingDAO.getAllBookings();
+
+        request.setAttribute("bookings", bookings);
+        List<Showtime> showtimes = new ArrayList<>();
+        for (Booking booking : bookings) {
+            showtimes.add(ShowtimeDAO.getShowtimeById(booking.getShowtimeId()));
+        }
+        request.setAttribute("showtimes", showtimes);
+        request.getRequestDispatcher("WEB-INF/views/payment/review-payment.jsp").forward(request, response);
+    }
 
 }

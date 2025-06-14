@@ -35,28 +35,7 @@ public class Movie implements java.io.Serializable {
         this.movieId = movieId;
     }
 
-    public int getPreviousMovieId() {
-        List<Integer> ids = MovieDAO.getMovieIds();
-        int index = ids.indexOf(movieId);
-
-        if (index > 0) {
-            return ids.get(index - 1);
-        } else {
-            return ids.get(ids.size() - 1);
-        }
-    }
-
-    public int getNextMovieId() {
-        List<Integer> ids = MovieDAO.getMovieIds();
-        int index = ids.indexOf(movieId);
-
-        if (index + 1 == ids.size()) {
-            return ids.get(0);
-        } else {
-            return ids.get(index + 1);
-        }
-
-    }
+    
 
     public String getLanguage() {
         return language;
@@ -151,7 +130,7 @@ public class Movie implements java.io.Serializable {
 
         if (today.isBefore(release)) {
             return "Coming Soon";
-        } else if (today.isBefore(release.plusDays(expiredDay-1))) {
+        } else if (today.isBefore(release.plusDays(expiredDay - 1))) {
             return "Ongoing";
         } else {
             return "Expired";
@@ -170,11 +149,11 @@ public class Movie implements java.io.Serializable {
             LocalDate lastDate = LocalDate.now().plusDays(3);
 
             for (LocalDate availableDate = todayDate; !availableDate.isAfter(lastDate); availableDate = availableDate.plusDays(1)) {
+
                 availableDates.add(availableDate.toString());
             }
 
         }
-        System.out.println(availableDates.size());
         return availableDates;
     }
 

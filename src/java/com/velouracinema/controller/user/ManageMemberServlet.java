@@ -22,23 +22,25 @@ import javax.servlet.http.HttpSession;
  */
 public class ManageMemberServlet extends HttpServlet {
 
+
+// <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
+     * Handles the HTTP <code>GET</code> method.
      *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
         String path = request.getServletPath();
         HttpSession session = request.getSession();
         User userSession = (User) session.getAttribute("user");
 
         if (path.equals("/viewMember")) {
-
             if (!Utils.authorizeUser(request, response, "admin")) {
                 response.sendError(401);
                 return;
@@ -55,9 +57,49 @@ public class ManageMemberServlet extends HttpServlet {
                 request.setAttribute("message", message);
             }
             request.getRequestDispatcher("WEB-INF/views/admin/manage-member.jsp").forward(request, response);
+        } else if (path.equals("/deleteMember")) {
 
-        } else if (path.equals(
-                "/updateMember")) {
+            if (!Utils.authorizeUser(request, response, "member") && !Utils.authorizeUser(request, response, "admin")) {
+                response.sendError(401);
+                return;
+            }
+
+            int id = Integer.parseInt(request.getParameter("id"));
+            int status = UserDAO.deleteUserById(id, "member");
+
+            if (status != 0) {
+                if (userSession.getRole().equals("member")) {
+                    session.removeAttribute("user");
+                    response.sendRedirect(request.getContextPath());
+                    return;
+                } else if (userSession.getRole().equals("admin")) {
+                    response.sendRedirect(request.getContextPath() + "/viewMember?message=Successfully deleted a member");
+                    return;
+                }
+            } else {
+                response.sendError(501);
+            }
+        }
+
+    }
+
+    /**
+     * Handles the HTTP <code>POST</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        String path = request.getServletPath();
+        HttpSession session = request.getSession();
+        User userSession = (User) session.getAttribute("user");
+
+        if (path.equals("/updateMember")) {
 
             if (!Utils.authorizeUser(request, response, "member")) {
                 response.sendError(401);
@@ -103,59 +145,7 @@ public class ManageMemberServlet extends HttpServlet {
             } else {
                 response.sendError(501);
             }
-
-        } else if (path.equals(
-                "/deleteMember")) {
-            if (!Utils.authorizeUser(request, response, "member") && !Utils.authorizeUser(request, response, "admin")) {
-                response.sendError(401);
-                return;
-            }
-
-            int id = Integer.parseInt(request.getParameter("id"));
-            int status = UserDAO.deleteUserById(id, "member");
-
-            if (status != 0) {
-                if (userSession.getRole().equals("member")) {
-                    session.removeAttribute("user");
-                    response.sendRedirect(request.getContextPath());
-                    return;
-                } else if (userSession.getRole().equals("admin")) {
-                    response.sendRedirect(request.getContextPath() + "/viewMember?message=Successfully deleted a member");
-                    return;
-                }
-            } else {
-                response.sendError(501);
-            }
         }
-    }
-
-// <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
-    }
-
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
     }
 
     /**

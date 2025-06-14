@@ -88,58 +88,62 @@
                         <c:forEach items="${bookings}" var="booking">
 
                             <c:if test="${(param.status == null || param.status == '' || booking.payment.status == param.status) && (param.bookingID == null || param.bookingID == '' || param.bookingID == booking.id)}">
+                                <c:forEach items="${showtimes}" var="showtime">
+                                    <c:if test="${booking.showtimeId == showtime.id}">
 
-                            <fmt:parseDate value="${booking.showtime.showDate}" type="both" var="parsedDate" pattern="yyyy-MM-dd"/>
-                            <fmt:parseDate value="${booking.showtime.showTime}" type="time" var="parsedTime" pattern="HH:mm:ss"/>
-                            <tr>
-                                <th class="text-center" scope="row"><c:out value="${booking.id}"/></th>
-                                <td class="text-center"><c:out value="${booking.memberId}"/></td>
-                                <td class="text-center text-capitalize"><c:out value="${booking.showtime.movie.title}"/></td>
-                                <td class="text-center"><fmt:formatDate value="${parsedDate}" pattern="dd/MM/yyyy"/> | <fmt:formatDate value="${parsedTime}" pattern="h:mm a"/></td>
-                            <td class="text-center text-uppercase"><c:out value="${booking.bookingDateFormatted}"/></td>
-                            <td class="text-center text-capitalize"><c:out value="${booking.status}"/></td>
-                            <td class="text-center text-capitalize"><c:out value="${booking.payment.paymentMethod}"/></td>
-                            <td class="text-center"><c:out value="${booking.payment.amount}"/></td>
-                            <td class="text-center">
 
-                                <!-- Button trigger modal -->
-                                <button type="button" class="btn btn-primary text-capitalize" data-bs-toggle="modal" data-bs-target="#payment-${booking.id}-Modal">
-                                    <c:out value="${booking.payment.status}"/>
-                                </button>
+                                        <fmt:parseDate value="${showtime.showDate}" type="both" var="parsedDate" pattern="yyyy-MM-dd"/>
+                                        <fmt:parseDate value="${showtime.showTime}" type="time" var="parsedTime" pattern="HH:mm:ss"/>
+                                        <tr>
+                                            <th class="text-center" scope="row"><c:out value="${booking.id}"/></th>
+                                            <td class="text-center"><c:out value="${booking.memberId}"/></td>
+                                            <td class="text-center text-capitalize"><c:out value="${showtime.movie.title}"/></td>
+                                            <td class="text-center"><fmt:formatDate value="${parsedDate}" pattern="dd/MM/yyyy"/> | <fmt:formatDate value="${parsedTime}" pattern="h:mm a"/></td>
+                                            <td class="text-center text-uppercase"><c:out value="${booking.bookingDateFormatted}"/></td>
+                                            <td class="text-center text-capitalize"><c:out value="${booking.status}"/></td>
+                                            <td class="text-center text-capitalize"><c:out value="${booking.payment.paymentMethod}"/></td>
+                                            <td class="text-center"><c:out value="${booking.payment.amount}"/></td>
+                                            <td class="text-center">
 
-                                <form action="${pageContext.request.contextPath}/updatePayment">
-                                    <!-- Modal -->
-                                    <div class="modal fade" id="payment-${booking.id}-Modal" tabindex="-1" aria-labelledby="payment-${booking.id}-ModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-centered">
-                                            <div class="modal-content bg-dark text-white">
-                                                <div class="modal-header">
-                                                    <h1 class="modal-title fs-5" id="payment-${booking.id}-ModalLabel">Change Payment Status</h1>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                </div>
-                                                <div class="modal-body d-flex justify-content-center gap-3">
-                                                    <input type="hidden" name="bookingId" value="${booking.id}">
-                                                    <input type="radio" class="btn-check " name="paymentStatus" id="not_paid-${booking.id}" value="not_paid" autocomplete="off" ${booking.payment.status == 'not_paid' ? 'disabled' : ''}>
-                                                    <label class="btn btn-secondary status-item" for="not_paid-${booking.id}">Not Paid</label>
-                                                    <input type="radio" class="btn-check" name="paymentStatus" id="paid-${booking.id}" value="paid" autocomplete="off" ${booking.payment.status == 'paid' ? 'disabled' : ''}>
-                                                    <label class="btn btn-secondary status-item" for="paid-${booking.id}">Paid</label>
-                                                    <input type="radio" class="btn-check" name="paymentStatus" id="refunded-${booking.id}" value="refunded" autocomplete="off" ${booking.payment.status == 'refunded' ? 'disabled' : ''}>
-                                                    <label class="btn btn-secondary status-item" for="refunded-${booking.id}">Refunded</label>
+                                                <!-- Button trigger modal -->
+                                                <button type="button" class="btn btn-primary text-capitalize" data-bs-toggle="modal" data-bs-target="#payment-${booking.id}-Modal">
+                                                    <c:out value="${booking.payment.status}"/>
+                                                </button>
 
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
-                                                    <input type="submit" value="Update" class="btn btn-primary">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </form>
+                                                <form action="${pageContext.request.contextPath}/updatePayment" method="POST">
+                                                    <!-- Modal -->
+                                                    <div class="modal fade" id="payment-${booking.id}-Modal" tabindex="-1" aria-labelledby="payment-${booking.id}-ModalLabel" aria-hidden="true">
+                                                        <div class="modal-dialog modal-dialog-centered">
+                                                            <div class="modal-content bg-dark text-white">
+                                                                <div class="modal-header">
+                                                                    <h1 class="modal-title fs-5" id="payment-${booking.id}-ModalLabel">Change Payment Status</h1>
+                                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                </div>
+                                                                <div class="modal-body d-flex justify-content-center gap-3">
+                                                                    <input type="hidden" name="bookingId" value="${booking.id}">
+                                                                    <input type="radio" class="btn-check " name="paymentStatus" id="not_paid-${booking.id}" value="not_paid" autocomplete="off" ${booking.payment.status == 'not_paid' ? 'disabled' : ''}>
+                                                                    <label class="btn btn-secondary status-item" for="not_paid-${booking.id}">Not Paid</label>
+                                                                    <input type="radio" class="btn-check" name="paymentStatus" id="paid-${booking.id}" value="paid" autocomplete="off" ${booking.payment.status == 'paid' ? 'disabled' : ''}>
+                                                                    <label class="btn btn-secondary status-item" for="paid-${booking.id}">Paid</label>
+                                                                    <input type="radio" class="btn-check" name="paymentStatus" id="refunded-${booking.id}" value="refunded" autocomplete="off" ${booking.payment.status == 'refunded' ? 'disabled' : ''}>
+                                                                    <label class="btn btn-secondary status-item" for="refunded-${booking.id}">Refunded</label>
 
-                            </td>
-                            </tr>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                                                                    <input type="submit" value="Update" class="btn btn-primary">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </form>
 
-                        </c:if>
-                    </c:forEach>
+                                            </td>
+                                        </tr>
+                                    </c:if>
+                                </c:forEach> 
+                            </c:if>
+                        </c:forEach>
 
 
                     </tbody>

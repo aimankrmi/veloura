@@ -73,9 +73,14 @@
         ${param.success}
         <jsp:include page="../../includes/header.jsp" flush="true"/>
 
-        <h1 class="glow-gold my-4 display-4" style="text-align: left; padding-left: 2.5rem;">Support Tickets</h1>
 
-        <div class="table-container container">
+        <div class="table-container container my-5">
+        <div>
+            <a href="${pageContext.request.contextPath}/staff"><i class="fa-solid fa-circle-chevron-left fa-xl mx-2" style="color: var(--color-light-gold);"></i></a>
+
+            <h1 class="glow-gold my-4 display-4 d-inline-block" style="text-align: left; ">Support Tickets</h1>
+
+        </div>
             <c:if test="${success==1}">
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                     Successfully update
@@ -111,7 +116,7 @@
                 </div>
 
                 <div class="col-md-2 align-self-end">
-                    <input type="submit" value="Filter" class="btn btn-success w-100">
+                    <input type="submit" value="Filter" class="btn btn-primary w-100">
                 </div>
             </form>
 
@@ -165,7 +170,7 @@
                                             <!-- Modal -->
                                             <form method="post" action="${pageContext.request.contextPath}/updateSupport" >
                                                 <input type="hidden" name="support_id" value="${support.id}">
-                                                
+
                                                 <div class="modal fade" id="replyModal" tabindex="-1" aria-labelledby="replyModalLabel" aria-hidden="true">
                                                     <div class="modal-dialog">
                                                         <div class="modal-content bg-dark text-white">

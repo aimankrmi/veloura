@@ -96,7 +96,7 @@
             </c:if>
             <p class="text-center text-light">Already a member? <a href="${pageContext.request.contextPath}/login">Log in now</a></p>
 
-            <form action="${pageContext.request.contextPath}/register" method="post">
+            <form action="${pageContext.request.contextPath}/register" method="post"autocomplete="off">
                 <div class="mb-3">
                     <label for="fullname" class="form-label">Full Name</label>
                     <input type="text" name="name" id="fullname" class="form-control bg-dark text-white" required placeholder="Enter full name">

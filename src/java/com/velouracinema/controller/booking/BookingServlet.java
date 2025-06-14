@@ -11,12 +11,15 @@ import com.velouracinema.dao.booking.SeatDAO;
 import com.velouracinema.dao.booking.ShowtimeDAO;
 import com.velouracinema.model.Booking;
 import com.velouracinema.model.Seat;
+import com.velouracinema.model.Showtime;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.UUID;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -30,21 +33,6 @@ import javax.servlet.http.HttpSession;
  */
 public class BookingServlet extends HttpServlet {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-
-    }
-
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
@@ -57,51 +45,100 @@ public class BookingServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-    
-        int id = 1;
+
         try {
-            id = request.getParameter("id") != null ? Integer.parseInt(request.getParameter("id")) : 1;
+            int id = request.getParameter("id") != null ? Integer.parseInt(request.getParameter("id")) : MovieDAO.getMovieIds().get(0);
 
-            String bookingToken = UUID.randomUUID().toString();
-            HttpSession session = request.getSession();
-            session.setAttribute("bookingToken", bookingToken);
-            request.setAttribute("bookingToken", bookingToken);
-            session.setAttribute("bookingTokenTime", System.currentTimeMillis());
-            request.setAttribute("movie", MovieDAO.getMovieById(id));
-            
-            
-            //  response.sendRedirect(request.getContextPath()+"/views/booking.jsp");
-            request.getRequestDispatcher("WEB-INF/views/booking/booking.jsp").forward(request, response);
+            // To avoid expired movie
+            if (MovieDAO.getMovieById(id).getStatus().equalsIgnoreCase("Expired") || MovieDAO.getMovieById(id).getStatus().equalsIgnoreCase("Coming Soon")) {
+                String next = request.getParameter("next") != null ? request.getParameter("next") : null;
+                if (next != null) {
+                    if (next.equals("true")) {
+                        response.sendRedirect(request.getContextPath() + "/booking?id=" + getNextMovieId(id) + "&next=true");
+                        return;
+                    } else {
+                        response.sendRedirect(request.getContextPath() + "/booking?id=" + getPreviousMovieId(id) + "&next=false");
+                        return;
 
-        } catch (NumberFormatException e) {
+                    }
+                }}
+
+                String date = request.getParameter("date");
+                String time = request.getParameter("time");
+
+                if (date != null) {
+
+                    List<String> showTimesByDate = getShowTimesByDate(id, date);
+                    request.setAttribute("showTimesByDate", showTimesByDate);
+
+                    if (time != null) {
+                        int showtimeId = ShowtimeDAO.getShowtimeByMovieId(id, date, time).getId();
+                        request.setAttribute("seatRowByShowtime", seatRowByShowtime(showtimeId));
+
+                        Showtime st = ShowtimeDAO.getShowtimeByMovieId(id, date, time);
+                        request.setAttribute("showtime", st);
+                    }
+
+                }
+
+                String bookingToken = UUID.randomUUID().toString();
+                HttpSession session = request.getSession();
+                session.setAttribute("bookingToken", bookingToken);
+                request.setAttribute("bookingToken", bookingToken);
+                session.setAttribute("bookingTokenTime", System.currentTimeMillis());
+                request.setAttribute("movie", MovieDAO.getMovieById(id));
+                request.setAttribute("previousMovieId", getPreviousMovieId(id));
+                request.setAttribute("nextMovieId", getNextMovieId(id));
+
+                //  response.sendRedirect(request.getContextPath()+"/views/booking.jsp");
+                request.getRequestDispatcher("WEB-INF/views/booking/booking.jsp").forward(request, response);
+
+            }catch (NumberFormatException e) {
             response.sendRedirect(request.getContextPath());
         }
 
-    }
-
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
         
-        response.sendRedirect(request.getContextPath()+"/booking");
     }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
+    public Map<String, List<Seat>> seatRowByShowtime(int showTimeId) {
+
+        Map<String, List<Seat>> seatMap = new LinkedHashMap<>();
+
+        for (Seat seat : SeatDAO.getSeatsByShowtimes(showTimeId)) {
+            String row = seat.getSeatNumber().substring(0, 1);
+            seatMap.computeIfAbsent(row, k -> new ArrayList<>()).add(seat);
+        }
+
+        return seatMap;
+
+    }
+
+    //    This method return the time for a movie and a date
+    public List<String> getShowTimesByDate(int movieId, String showDate) {
+        return ShowtimeDAO.getMovieTimeById(movieId, showDate);
+    }
+
+    public int getPreviousMovieId(int movieId) {
+        List<Integer> ids = MovieDAO.getMovieIds();
+        int index = ids.indexOf(movieId);
+
+        if (index > 0) {
+            return ids.get(index - 1);
+        } else {
+            return ids.get(ids.size() - 1);
+        }
+    }
+
+    public int getNextMovieId(int movieId) {
+        List<Integer> ids = MovieDAO.getMovieIds();
+        int index = ids.indexOf(movieId);
+
+        if (index + 1 == ids.size()) {
+            return ids.get(0);
+        } else {
+            return ids.get(index + 1);
+        }
+
+    }
 
 }

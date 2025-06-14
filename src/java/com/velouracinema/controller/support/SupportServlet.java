@@ -9,7 +9,6 @@ import com.velouracinema.model.SupportRequest;
 import com.velouracinema.util.EmailUtils;
 import com.velouracinema.util.Utils;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -111,15 +110,4 @@ public class SupportServlet extends HttpServlet {
         }
 
     }
-
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-
 }

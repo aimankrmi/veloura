@@ -79,16 +79,16 @@
                                                     <label for="movieNameFormControlInput1" class="form-label">
                                                         Title</label>
                                                     <input type="text" class="form-control bg-dark text-white"
-                                                           id="movieNameFormControlInput1" name="movieTitle" required>
+                                                           id="movieNameFormControlInput1" name="movieTitle" required autocomplete="off">
                                                 </div>
 
                                                 <!-- GENRE -->
                                                 <div class="mb-3">
                                                     <label class="form-label">Genre</label>
-                                                    <c:forTokens items="Action,Sci-Fi,Crime,Drama,Horror,Mystery,Adventure,Animation" delims="," var="genre">
+                                                    <c:forTokens items="Action,Sci-Fi,Crime,Drama,Horror,Mystery,Adventure,Animation,Comedy,Fantasy,Romance,Thriller,Documentary,Family,War,Musical" delims="," var="genre">
                                                         <div class="form-check">
                                                             <input class="form-check-input" type="checkbox" name="genre"
-                                                                   value="${genre}" id="${genre}-genre-input">
+                                                                   value="${fn:toLowerCase(genre)}" id="${genre}-genre-input">
                                                             <label class="form-check-label" for="${genre}-genre-input">
                                                                 ${genre}
                                                             </label>
@@ -100,10 +100,10 @@
                                                 <div class="mb-3">
 
                                                     <label class="form-label">Language</label>
-                                                    <c:forTokens items="English,Malay,Chinese,Hindi,Japan,France,Spanish,Arabic" delims="," var="language">
+                                                    <c:forTokens items="English,Malay,Mandarin,German,Italian,Russian,Hindi,Korean,Japanese,France,Spanish,Arabic" delims="," var="language">
                                                         <div class="form-check">
                                                             <input class="form-check-input " type="radio" name="language" 
-                                                                   id="radio${language}" value="${language}" ${language eq "English" ? "checked" : ""}>
+                                                                   id="radio${language}" value="${fn:toLowerCase(language)}" ${language eq "English" ? "checked" : ""}>
                                                             <label class="form-check-label" for="radio${language}">
                                                                 ${language}
                                                             </label>
@@ -116,7 +116,7 @@
                                                     <label for="movieDurationFormControlInput1" class="form-label">
                                                         Duration</label>
                                                     <input type="number" name="duration" class="form-control bg-dark text-white" min="0"
-                                                           max="240" id="movieDurationFormControlInput1" required>
+                                                           max="240" id="movieDurationFormControlInput1" autocomplete="off" required>
                                                 </div>
 
                                                 <br>
@@ -125,7 +125,7 @@
                                                     <label for="moviePriceFormControlInput1" class="form-label ">
                                                         Price</label>
                                                     <input type="number" name="price" class="form-control bg-dark text-white" min="0"
-                                                           step="0.01" id="moviePriceFormControlInput1" required>
+                                                           step="0.01" id="moviePriceFormControlInput1" autocomplete="off" required>
                                                 </div>
 
                                                 <br>
@@ -146,12 +146,12 @@
                                                                                                                class="form-label">Image Path
                                                                                                         </label>
                                                                                                         <input type="text" class="form-control bg-dark text-white"
-                                                                                                               id="movieImagePathFormControlInput1" name="imagePath" required>-->
+                                                                                                               id="movieImagePathFormControlInput1" name="imagePath" autocomplete="off" required>-->
                                                     <label for="movieImagePathFormControlInput1"
                                                            class="form-label">Image
                                                     </label>
                                                     <input type="file" class="form-control bg-dark text-white"
-                                                           id="movieImagePathFormControlInput1" name="image" required>
+                                                           id="movieImagePathFormControlInput1" name="image" autocomplete="off" required>
                                                 </div>
 
                                                 <br>
@@ -160,7 +160,7 @@
                                                     <label for="date" class="col-sm-2 col-form-label ">Release Date</label>
                                                     <div class="col-12">
                                                         <div class="input-group date" id="datepicker">
-                                                            <input type="text" class="form-control bg-dark text-white" name="releaseDate">
+                                                            <input type="text" class="form-control bg-dark text-white" name="releaseDate" autocomplete="off">
                                                             <span class="input-group-append">
                                                                 <span class="input-group-text bg-white d-block">
                                                                     <i class="fa fa-calendar"></i>
@@ -208,8 +208,8 @@
                                 <tr>
                                     <th scope="row">${movie.movieId}</th>
                                     <td>${movie.title}</td>
-                                    <td>${movie.genre}</td>
-                                    <td>${movie.language}</td>
+                                    <td class="text-capitalize">${movie.genre}</td>
+                                    <td class="text-capitalize">${movie.language}</td>
                                     <td>${movie.duration}</td>
                                     <td>${movie.description}</td>
                                     <td>${movie.price}</td>
@@ -244,17 +244,17 @@
                                                                 <label for="movieNameFormControlInput1" class="form-label">
                                                                     Title</label>
                                                                 <input type="text" class="form-control bg-dark text-white"
-                                                                       id="movieNameFormControlInput1" name="movieTitle" value="<c:out value='${movie.title}'/>" required>
+                                                                       id="movieNameFormControlInput1" name="movieTitle" value="<c:out value='${movie.title}'/>" autocomplete="off" required>
                                                             </div>
 
                                                             <!-- GENRE -->
                                                             <label class="form-label">Genre</label>
                                                             <div class="mb-3">
-                                                                <c:forTokens items="Action,Sci-Fi,Crime,Drama,Horror,Mystery,Adventure,Animation" delims="," var="genre">
+                                                                <c:forTokens items="Action,Sci-Fi,Crime,Drama,Horror,Mystery,Adventure,Animation,Comedy,Fantasy,Romance,Thriller,Documentary,Family,War,Musical" delims="," var="genre">
                                                                     <div class="form-check">
 
                                                                         <input class="form-check-input" type="checkbox" name="genre"
-                                                                               value="${genre}" id="${genre}-genre-input" ${fn:contains(movie.genre, genre) ? "checked" : ""}
+                                                                               value="${fn:toLowerCase(genre)}" id="${genre}-genre-input" ${fn:contains(fn:toLowerCase(movie.genre), fn:toLowerCase(genre) ) ? "checked" : ""}
                                                                                >
                                                                         <label class="form-check-label" for="${genre}-genre-input">
                                                                             ${genre}
@@ -265,10 +265,10 @@
                                                             <!-- Language -->
                                                             <div class="mb-3">
                                                                 <label class="form-label">Language</label>
-                                                                <c:forTokens items="English,Malay,Chinese,Hindi,Japan,France,Spanish,Arabic" delims="," var="language">
+                                                                <c:forTokens items="English,Malay,Mandarin,German,Italian,Russian,Hindi,Korean,Japanese,France,Spanish,Arabic" delims="," var="language">
                                                                     <div class="form-check">
                                                                         <input class="form-check-input " type="radio" name="language" 
-                                                                               id="radio${language}" value="${language}" ${language eq movie.language ? "checked" : ""}>
+                                                                               id="radio${language}" value="${fn:toLowerCase(language)}" ${fn:toLowerCase(language) eq fn:toLowerCase(movie.language) ? "checked" : ""}>
                                                                         <label class="form-check-label" for="radio${language}">
                                                                             ${language}
                                                                         </label>
@@ -281,7 +281,7 @@
                                                                 <label for="movieDurationFormControlInput1" class="form-label">
                                                                     Duration</label>
                                                                 <input type="number" name="duration" class="form-control bg-dark text-white" min="0"
-                                                                       max="240" id="movieDurationFormControlInput1"value="<c:out value='${movie.duration}'/>" required>
+                                                                       max="240" id="movieDurationFormControlInput1"value="<c:out value='${movie.duration}'/>" autocomplete="off" required>
                                                             </div>
 
                                                             <!-- MOVIE PRICE -->
@@ -289,7 +289,7 @@
                                                                 <label for="moviePriceFormControlInput1" class="form-label">
                                                                     Price</label>
                                                                 <input type="number" name="price" class="form-control bg-dark text-white " min="0"
-                                                                       step="0.01" id="moviePriceFormControlInput1" value="<c:out value='${movie.price}'/>" required>
+                                                                       step="0.01" id="moviePriceFormControlInput1" value="<c:out value='${movie.price}'/>" autocomplete="off" required>
                                                             </div>
 
 
@@ -303,11 +303,6 @@
 
                                                             <!-- MOVIE IMAGE PATH -->
                                                             <div class="mb-3">
-                                                                <!--                                                                <label for="movieImagePathFormControlInput1"
-                                                                                                                                       class="form-label">Image Path
-                                                                                                                                </label>
-                                                                                                                                <input type="text" class="form-control bg-dark text-white"
-                                                                                                                                       id="movieImagePathFormControlInput1" value="<c:out value='${movie.imagePath}'/>" name="imagePath" required>-->
                                                                 <input type="hidden"  name="oldImage" value="<c:out value='${movie.imagePath}'/>">
                                                                 <label for="movieImagePathFormControlInput1"
                                                                        class="form-label">Image
@@ -327,7 +322,7 @@
                                                                 <label for="date" class="col-sm-2 col-form-label ">Release Date</label>
                                                                 <div class="col-12">
                                                                     <div class="input-group date" id="datepicker<c:out value='${movie.movieId}'/>">
-                                                                        <input type="text" class="form-control bg-dark text-white" name="releaseDate" value="${formattedReleaseDate}">
+                                                                        <input type="text" class="form-control bg-dark text-white" name="releaseDate" value="${formattedReleaseDate}" autocomplete="off">
                                                                         <span class="input-group-append">
                                                                             <span class="input-group-text bg-white d-block">
                                                                                 <i class="fa fa-calendar"></i>

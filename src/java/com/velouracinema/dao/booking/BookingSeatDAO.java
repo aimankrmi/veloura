@@ -86,4 +86,25 @@ public class BookingSeatDAO {
         }
         return status;
     }
+    
+    // To remove booked seat (edit booking)
+    public static int removeBookedSeat(int bookingId, int seatId) {
+        String sql = "DELETE FROM booking_seats WHERE booking_id = ? AND seat_id ?";
+        Connection conn = null;
+        int status = 0;
+
+        try {
+            conn = DBUtil.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, bookingId);
+            stmt.setInt(2, seatId);
+
+            status = stmt.executeUpdate();
+
+            conn.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(BookingDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return status;
+    }
 }

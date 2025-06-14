@@ -22,23 +22,24 @@ import javax.servlet.http.HttpSession;
  */
 public class ManageStaffServlet extends HttpServlet {
 
+
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
+     * Handles the HTTP <code>GET</code> method.
      *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
         String path = request.getServletPath();
         HttpSession session = request.getSession();
         User userSession = (User) session.getAttribute("user");
-
-        if (path.equals("/viewStaff")) {
+    
+    if (path.equals("/viewStaff")) {
 
             if (!Utils.authorizeUser(request, response, "admin")) {
                 response.sendError(401);
@@ -57,7 +58,42 @@ public class ManageStaffServlet extends HttpServlet {
             }
             request.getRequestDispatcher("WEB-INF/views/admin/manage-staff.jsp").forward(request, response);
 
-        } else if (path.equals("/addStaff")) {
+        }else if (path.equals("/deleteStaff")) {
+
+            if (!Utils.authorizeUser(request, response, "admin")) {
+                response.sendError(401);
+                return;
+            }
+
+            int id = Integer.parseInt(request.getParameter("id"));
+            int status = UserDAO.deleteUserById(id, "staff");
+
+            if (status != 0) {
+                response.sendRedirect(request.getContextPath() + "/viewStaff?message=Successfully deleted a staff");
+            } else {
+                response.sendError(501);
+            }
+        }
+    
+    }
+        
+
+    /**
+     * Handles the HTTP <code>POST</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String path = request.getServletPath();
+        HttpSession session = request.getSession();
+        User userSession = (User) session.getAttribute("user");
+        
+        if (path.equals("/addStaff")) {
             if (!Utils.authorizeUser(request, response, "admin")) {
                 response.sendError(401);
                 return;
@@ -140,52 +176,8 @@ public class ManageStaffServlet extends HttpServlet {
                 response.sendError(501);
             }
 
-        } else if (path.equals("/deleteStaff")) {
-
-            if (!Utils.authorizeUser(request, response, "admin")) {
-                response.sendError(401);
-                return;
-            }
-
-            int id = Integer.parseInt(request.getParameter("id"));
-            int status = UserDAO.deleteUserById(id, "staff");
-
-            if (status != 0) {
-                response.sendRedirect(request.getContextPath() + "/viewStaff?message=Successfully deleted a staff");
-            } else {
-                response.sendError(501);
-            }
         }
-
-    }
-
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
-    }
-
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
+        
     }
 
     /**

@@ -25,8 +25,8 @@
     </head>
     <body>
         <jsp:include page="../../includes/header.jsp" />
-        <jsp:useBean id="booking" class="com.velouracinema.model.Booking" scope="request"/>
-        <jsp:useBean id="showtime" class="com.velouracinema.model.Showtime" scope="request"/>
+        <%--<jsp:useBean id="booking" class="com.velouracinema.model.Booking" scope="request"/>--%>
+        <%--<jsp:useBean id="showtime" class="com.velouracinema.model.Showtime" scope="request"/>--%>
         <fmt:parseDate value="${showtime.showDate}" type="both" var="parsedDate" pattern="yyyy-MM-dd"/>
         <fmt:parseDate value="${showtime.showTime}" type="time" var="parsedTime" pattern="HH:mm:ss"/>
         <div class="fluid-container">
@@ -189,7 +189,6 @@
                         <input type="hidden" name="bookingId" value="${booking.id}">
                         <input type="hidden" name="paymentMethod" value="counter">
                         <input type="hidden" name="showtimeId" value="${showtime.id}">
-
                         <input type="submit" class="btn btn-primary mx-auto" value="Pay At Counter"  <c:if test="${not allowCounterPayment}">disabled </c:if>>
 
                         </form>

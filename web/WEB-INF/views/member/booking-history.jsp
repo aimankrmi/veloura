@@ -69,64 +69,71 @@
                         <tbody class="table-hover">
 
                             <c:forEach items="${bookings}" var="booking">
-                                <fmt:parseDate value="${booking.showtime.showDate}" type="both" var="parsedDate" pattern="yyyy-MM-dd"/>
-                                <fmt:parseDate value="${booking.showtime.showTime}" type="time" var="parsedTime" pattern="HH:mm:ss"/>
-                                <tr>
-                                    <th class="text-center" scope="row"><c:out value="${booking.id}"/></th>
-                                    <td class="text-center"><c:out value="${booking.showtime.movie.title}"/></td>
-                                    <td class="text-center"><fmt:formatDate value="${parsedDate}" pattern="dd/MM/yyyy"/> | <fmt:formatDate value="${parsedTime}" pattern="h:mm a"/></td>
-                                    <td class="text-capitalize text-center"><c:out value="${booking.status}"/></td>
-                                    <td class="text-center"> 
-                                        |
-                                        <c:forEach items="${booking.seats}" var="seat">
-                                            <c:out value="${seat.seatNumber}"/> |
-                                        </c:forEach>
-                                    </td>
-                                    <td class="text-capitalize text-center"><c:out value="${booking.payment.paymentMethod}"/></td>
-                                    <td class="text-center"><c:out value="${booking.payment.amount}"/></td>
-                                    <td class="text-capitalize text-center">
-                                        <c:out value="${booking.payment.status}"/></td>
-                                    <td class="text-center">
-                                        <c:if test="${booking.status == 'confirmed'}">
-                                            <c:if test="${booking.payment.status == 'paid'}">
-                                                <form action="${pageContext.request.contextPath}/editBooking" method="POST">
-                                                    <input type="hidden" name="bookingId" value="${booking.id}">
-                                                    <input type="hidden" name="action" value="edit">
-                                                    <input class="btn btn-primary mb-1" type="submit" value="Edit" ${(!booking.showtime.upcoming || booking.payment.status != 'paid') ? 'disabled' : ''}>
-                                                </form>
-                                            </c:if>
+                                <c:forEach items="${showtimes}" var="showtime">
+                                    <c:if test="${showtime.id == booking.showtimeId}">
+                                        <fmt:parseDate value="${ showtime.showDate}" type="both" var="parsedDate" pattern="yyyy-MM-dd"/>
+                                        <fmt:parseDate value="${showtime.showTime}" type="time" var="parsedTime" pattern="HH:mm:ss"/>
 
-                                            <!-- Button trigger modal -->
-                                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#cancelModal">
-                                                Cancel
-                                            </button>
 
-                                            <!-- Modal -->
-                                            <div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
-                                                <div class="modal-dialog">
-                                                    <div class="modal-content">
-                                                        <div class="modal-body">
-                                                            Do you really want to cancel this booking?
-                                                            <form action="${pageContext.request.contextPath}/editBooking" method="POST">
-                                                                <input type="hidden" name="bookingId" value="${booking.id}">
-                                                                <input type="hidden" name="action" value="cancel">
-                                                                <input class="btn btn-success" type="submit" value="Yes" >
-                                                            </form>
+                                        <tr>
+                                            <th class="text-center" scope="row"><c:out value="${booking.id}"/></th>
+                                            <td class="text-center"><c:out value="${showtime.movie.title}"/></td>
+                                            <td class="text-center"><fmt:formatDate value="${parsedDate}" pattern="dd/MM/yyyy"/> | <fmt:formatDate value="${parsedTime}" pattern="h:mm a"/></td>
+                                            <td class="text-capitalize text-center"><c:out value="${booking.status}"/></td>
+                                            <td class="text-center"> 
+                                                |
+                                                <c:forEach items="${booking.seats}" var="seat">
+                                                    <c:out value="${seat.seatNumber}"/> |
+                                                </c:forEach>
+                                            </td>
+                                            <td class="text-capitalize text-center"><c:out value="${booking.payment.paymentMethod}"/></td>
+                                            <td class="text-center"><c:out value="${booking.payment.amount}"/></td>
+                                            <td class="text-capitalize text-center">
+                                                <c:out value="${booking.payment.status}"/></td>
+                                            <td class="text-center">
+                                                <c:if test="${booking.status == 'confirmed'}">
+                                                    <c:if test="${booking.payment.status == 'paid'}">
+                                                        <form action="${pageContext.request.contextPath}/editBooking" method="POST">
+                                                            
+                                                            <input type="hidden" name="bookingId" value="${booking.id}">
+                                                            <input type="hidden" name="action" value="edit">
+                                                            <input class="btn btn-primary mb-1" type="submit" value="Edit" ${(!showtime.upcoming || booking.payment.status != 'paid') ? 'disabled' : ''}>
+                                                        </form>
+                                                    </c:if>
+
+                                                    <!-- Button trigger modal -->
+                                                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#cancelModal">
+                                                        Cancel
+                                                    </button>
+
+                                                    <!-- Modal -->
+                                                    <div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
+                                                        <div class="modal-dialog  modal-dialog-centered">
+                                                            <div class="modal-content bg-dark text-white">
+                                                                <div class="modal-body">
+                                                                    Do you really want to cancel this booking?
+                                                                    <form class="mt-2" action="${pageContext.request.contextPath}/editBooking" method="POST">
+                                                                        <input type="hidden" name="bookingId" value="${booking.id}">
+                                                                        <input type="hidden" name="action" value="cancel">
+                                                                        <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Cancel</button>
+                                                                        <input class="btn btn-success " type="submit" value="Yes" >
+                                                                    </form>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            </div>
 
 
 
 
-                                        </c:if>
-                                        <c:if test="${booking.status == 'cancelled'}">
-                                            NA
-                                        </c:if>
-                                    </td>
-                                </tr>
-
+                                                </c:if>
+                                                <c:if test="${booking.status == 'cancelled' || booking.status == 'expired'}">
+                                                    NA
+                                                </c:if>
+                                            </td>
+                                        </tr>
+                                    </c:if>
+                                </c:forEach>
                             </c:forEach>
 
 

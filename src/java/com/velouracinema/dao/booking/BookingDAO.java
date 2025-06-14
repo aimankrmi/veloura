@@ -38,7 +38,7 @@ public class BookingDAO {
                 + "p.payment_method AS payment_method,"
                 + "p.amount AS payment_amount,"
                 + "p.status AS payment_status"
-                + " FROM ((bookings b INNER JOIN payments p ON b.id = p.booking_id) INNER JOIN users u ON b.member_id = u.id) WHERE b.status = 'confirmed';";
+                + " FROM ((bookings b INNER JOIN payments p ON b.id = p.booking_id) INNER JOIN users u ON b.member_id = u.id) WHERE b.status = 'confirmed' OR b.status = 'cancelled';";
         try (Connection conn = DBUtil.getConnection(); Statement stmt = conn.createStatement();) {
             ResultSet rs = stmt.executeQuery(sql);
 
@@ -189,26 +189,7 @@ public class BookingDAO {
         return bookingDate;
     }
 
-    // To remove booked seat (edit booking)
-    public static int removeBookedSeat(int bookingId, int seatId) {
-        String sql = "DELETE FROM booking_seats WHERE booking_id = ? AND seat_id ?";
-        Connection conn = null;
-        int status = 0;
-
-        try {
-            conn = DBUtil.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setInt(1, bookingId);
-            stmt.setInt(2, seatId);
-
-            status = stmt.executeUpdate();
-
-            conn.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(BookingDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return status;
-    }
+    
 
     // Update booking status to confirm
     public static int updateBookingStatus(int bookingId) {

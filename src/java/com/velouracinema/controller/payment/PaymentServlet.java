@@ -35,38 +35,6 @@ import javax.servlet.http.HttpSession;
 public class PaymentServlet extends HttpServlet {
 
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the
-    // + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
-        response.sendError(401);
-        
-//        String path = request.getServletPath();
-//        if ("/payment".equals(path)) {
-//
-//            String formToken = request.getParameter("bookingToken");
-//            HttpSession session = request.getSession();
-//
-//            String sessionToken = (String) session.getAttribute("bookingToken");
-//            Long tokenTime = (Long) session.getAttribute("bookingTokenTime");
-//
-//            if (sessionToken == null || !sessionToken.equals(formToken) || tokenTime == null) {
-//                response.sendError(409, "Duplicate or expired booking token.");
-//                return;
-//            }
-//        }
-    }
-
     /**
      * Handles the HTTP <code>POST</code> method.
      *
@@ -93,24 +61,6 @@ public class PaymentServlet extends HttpServlet {
                 response.sendRedirect(request.getContextPath() + "/logout");
                 return;
         }
-
-//        if (user.getId() == 0 || !user.getRole().equalsIgnoreCase("member")) {
-//            String message;
-//            String uri = request.getRequestURI();
-//            String query = request.getQueryString();
-//            String redirectURL = uri + (query != null ? "?" + query : "");
-//
-//            // Store in session
-//            request.getSession().setAttribute("redirectAfterLogin", redirectURL);
-//
-//            if (!user.getRole().equalsIgnoreCase("member")) {
-////                message = "You need to be a member to book ticket.";
-//            } else {
-//                message = "Please login first";
-//                response.sendRedirect(request.getContextPath() + "/login?message=" + message);
-//            }
-//            return;
-//        } 
 
         String formToken = request.getParameter("bookingToken");
 
@@ -162,7 +112,6 @@ public class PaymentServlet extends HttpServlet {
         }
 
         int paymentId = PaymentDAO.insertPayment(bookingId, totalAmount);// Obtain booking ID while insert payment
-        System.out.println("CREATE PAYMENT");
         session.removeAttribute("bookingToken");
         session.removeAttribute("bookingTokenTime");
         Payment payment = new Payment();
@@ -178,10 +127,11 @@ public class PaymentServlet extends HttpServlet {
         booking.setSeats(seatsBooked);
         booking.setPayment(payment);
 
-        Showtime showtime = new Showtime();
-        showtime.setMovie(MovieDAO.getMovieById(movieId));
-        showtime.setShowDate(date);
-        showtime.setShowTime(time);
+        Showtime showtime= ShowtimeDAO.getShowtimeById(showtimeId);
+//        Showtime showtime = new Showtime();
+//        showtime.setMovie(MovieDAO.getMovieById(movieId));
+//        showtime.setShowDate(date);
+//        showtime.setShowTime(time);
 
         // To check if the showtime is less than 3 hours
         LocalDateTime showtimeTime = ShowtimeDAO.getShowtimeDateTime(showtimeId);
@@ -191,29 +141,10 @@ public class PaymentServlet extends HttpServlet {
         // Store flag in request/session
         request.setAttribute("allowCounterPayment", allowCounterPayment);
 
-        // Hantar dekat Payment
-        // request.setAttribute("movie_name",
-        // MovieDAO.getMovieById(movieId).getTitle());
         request.setAttribute("showtime", showtime);
-        // request.setAttribute("payment", payment);
-        // request.setAttribute("total_amount", totalAmount);
-        // request.setAttribute("member_id", memberId);
-        // request.setAttribute("showtime_id", showtimeId);
-        // request.setAttribute("seat", seats);
         request.setAttribute("booking", booking);
 
         request.getRequestDispatcher("WEB-INF/views/payment/payment.jsp").forward(request, response);
 
     }
-
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-
 }

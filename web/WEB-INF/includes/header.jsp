@@ -22,9 +22,6 @@
                     <li class="nav-item ">
                         <a class="nav-link me-2 ms-2" href="${pageContext.request.contextPath}/support">Support</a>
                     </li>
-                    <li class="nav-item ">
-                        <a class="nav-link ms-2 me-2" href="#">Contact</a>
-                    </li>
                     <c:if test="${user.id != 0}">
                     <li class="nav-item">
                         <a class="nav-link ms-2 me-2" href="${pageContext.request.contextPath}/${fn:toLowerCase(user.role)}">Account</a>

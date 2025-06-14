@@ -48,16 +48,16 @@ public class Booking implements java.io.Serializable {
         this.showtimeId = showtimeId;
     }
 
-    public Showtime getShowtime() {
-        return ShowtimeDAO.getShowtimeById(this.showtimeId);
-    }
+//    public Showtime getShowtime() {
+//        return ShowtimeDAO.getShowtimeById(this.showtimeId);
+//    }
 
     public LocalDateTime getBookingDate() {
         return bookingDate;
     }
 
     public String getBookingDateFormatted() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy | HH:mm a");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy | h:mm a");
 
         return bookingDate.format(formatter);
     }

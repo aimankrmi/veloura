@@ -25,9 +25,9 @@
         <script src="assets/js/edit-booking.js" type="text/javascript" defer></script>
     </head>
     <body>
-        <jsp:useBean id="booking" class="com.velouracinema.model.Booking" scope="request"/>
-    <fmt:parseDate value="${booking.showtime.showDate}" type="both" var="parsedDate" pattern="yyyy-MM-dd"/>
-    <fmt:parseDate value="${booking.showtime.showTime}" type="time" var="parsedTime" pattern="HH:mm:ss"/>
+        <%--<jsp:useBean id="booking" class="com.velouracinema.model.Booking" scope="request"/>--%>
+    <fmt:parseDate value="${showtime.showDate}" type="both" var="parsedDate" pattern="yyyy-MM-dd"/>
+    <fmt:parseDate value="${showtime.showTime}" type="time" var="parsedTime" pattern="HH:mm:ss"/>
 
     <jsp:include page="../../includes/header.jsp" />
     <div class="fluid-container">
@@ -54,7 +54,7 @@
                         <tr class="row">
                             <th class="col-12 col-sm-6 text-center text-sm-start" scope="row">Order Description
                             </th>
-                            <td class="col-12 col-sm-6 text-center text-sm-start"><c:out value="${booking.showtime.movie.title}"/><br>
+                            <td class="col-12 col-sm-6 text-center text-sm-start"><c:out value="${showtime.movie.title}"/><br>
                     <fmt:formatDate value="${parsedDate}" pattern="dd MMMM yyyy"/> <fmt:formatDate value="${parsedTime}" pattern="h:mm a"/>
                     </td>
                     </tr>
@@ -90,7 +90,7 @@
     </div>
 
     <form action="${pageContext.request.contextPath}/processEditBooking" method="POST"> 
-        <input type="hidden" name="showtime-id" value="${booking.showtimeId}">
+        <input type="hidden" name="showtime-id" value="${showtime.id}">
         <c:forEach items="${booking.seats}" var="seat">
             <input type="hidden" name="booked-seat" value="${seat.seatId}">
         </c:forEach>
@@ -103,7 +103,7 @@
             </div>
             <div class="screen mx-auto my-4 pt-4 text-center">Screen</div>
             <div class="seat-selection-wrapper pb-2 fluid-container mx-auto overflow-auto" data-seat-booked="${booking.seats.size()}">   
-                <c:forEach items="${booking.showtime.seatRowByShowtime}" var="row">
+                <c:forEach items="${seatRowByShowtime}" var="row">
                     <c:set var="seatRow" value="${row.key}"/>
                     <div class="row seat-row mx-4 flex-nowrap" data-seat="${seatRow}">
                         <c:forEach items="${row.value}" var="seat" varStatus="status">
@@ -117,7 +117,7 @@
                             <div class="col-1">
                                 <input type="checkbox" class="btn-check"
                                        name="seat" value="${seatNumber}" id="${seatNumber}"
-                                       onchange="addSeat(this.id)" data-price="${movieShowtime.movie.price}"
+                                       onchange="addSeat(this.id)" data-price="${showtime.movie.price}"
                                        <c:if test="${!seat.isAvailable && !bookedSeat}">
                                            disabled 
                                        </c:if>

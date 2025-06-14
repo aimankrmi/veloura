@@ -5,19 +5,12 @@
 package com.velouracinema.util;
 
 import com.velouracinema.model.User;
-import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.time.Duration;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -101,19 +94,8 @@ public class Utils {
     public static String formatTime(String str) {
         LocalTime time = LocalTime.parse(str);
 
-//        int hour = time.getHour();
-//        int minute = time.getMinute();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm a");
-        
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("h:mm a");
         return time.format(formatter);
         
     }
-//    public static List<String> formatDate(List<String> date){
-//        List<String> formattedDate = new ArrayList();
-//        
-//        formattedDate.f
-//        
-//        return formattedDate;
-//    }
-
 }

@@ -20,19 +20,6 @@ import javax.servlet.http.HttpSession;
  */
 public class RegisterServlet extends HttpServlet {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-    }
-
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
@@ -52,7 +39,6 @@ public class RegisterServlet extends HttpServlet {
             return;
         }
         request.getRequestDispatcher("/WEB-INF/views/user/register.jsp").forward(request, response);
-//        response.sendRedirect(request.getContextPath()+"/WEB-INF/views/user/register.jsp");
     }
 
     /**

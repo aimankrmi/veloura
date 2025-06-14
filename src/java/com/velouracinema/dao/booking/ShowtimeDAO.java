@@ -5,7 +5,6 @@
 package com.velouracinema.dao.booking;
 
 import com.velouracinema.dao.movie.MovieDAO;
-import static com.velouracinema.dao.movie.MovieDAO.getMovieById;
 import com.velouracinema.dao.payment.PaymentDAO;
 import com.velouracinema.model.Showtime;
 import com.velouracinema.util.DBUtil;
@@ -45,14 +44,14 @@ public class ShowtimeDAO {
                 showtime.setScreen(rs.getString("screen"));
                 movieShowtimesList.add(showtime);
             }
-            
+
             conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return movieShowtimesList;
     }
-    
+
     public static Showtime getShowtimeById(int id) {
         String sql = "SELECT * FROM showtimes WHERE id = ?";
 
@@ -67,14 +66,14 @@ public class ShowtimeDAO {
                 showtime.setShowDate(rs.getString("show_date"));
                 showtime.setShowTime(rs.getString("show_time"));
                 showtime.setScreen(rs.getString("screen"));
+                showtime.setSeats(SeatDAO.getSeatsByShowtimes(rs.getInt("id")));
             }
-            
+
             conn.close();
         } catch (SQLException e) {
         }
         return showtime;
     }
-    
 
     public static List<String> getMovieDatesById(int id) {
         String sql = "SELECT DISTINCT show_date FROM showtimes WHERE movie_id = ?";
@@ -86,7 +85,7 @@ public class ShowtimeDAO {
             while (rs.next()) {
                 movieShowdatesList.add(rs.getString(1));
             }
-            
+
             conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -105,7 +104,7 @@ public class ShowtimeDAO {
             while (rs.next()) {
                 movieShowtimesList.add(rs.getString("show_time"));
             }
-            
+
             conn.close();
         } catch (SQLException e) {
         }
@@ -124,10 +123,13 @@ public class ShowtimeDAO {
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 showtime.setId(rs.getInt("id"));
+                showtime.setMovie(MovieDAO.getMovieById(rs.getInt("movie_id")));
+                showtime.setShowDate(rs.getString("show_date"));
+                showtime.setShowTime(rs.getString("show_time"));
                 showtime.setScreen(rs.getString("screen"));
-                showtime.setShowDate(movieDate);
+                showtime.setSeats(SeatDAO.getSeatsByShowtimes(rs.getInt("id")));
             }
-            
+
             conn.close();
         } catch (SQLException e) {
         }
@@ -149,7 +151,7 @@ public class ShowtimeDAO {
 
                 return LocalDateTime.of(date, time);
             }
-            
+
             conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -157,15 +159,14 @@ public class ShowtimeDAO {
 
         return null;
     }
-    
-    
+
     // To generate a showtime with seat
-    public static int generateShowtime(int movieId, String showDate, String showTime, String screen){
-        
+    public static int generateShowtime(int movieId, String showDate, String showTime, String screen) {
+
         String sql = "INSERT INTO showtimes (movie_id, show_date, show_time, screen) VALUES (?, ?, ?, ?)";
         Connection conn = null;
         int showtimeId = -1;
-        
+
         try {
             conn = DBUtil.getConnection();
             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -196,10 +197,5 @@ public class ShowtimeDAO {
 
         return showtimeId;
     }
-        
-        
-        
-        
-        
 
 }

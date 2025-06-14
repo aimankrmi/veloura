@@ -4,6 +4,7 @@
  */
 package com.velouracinema.util;
 
+import com.velouracinema.dao.booking.ShowtimeDAO;
 import com.velouracinema.dao.movie.MovieDAO;
 import com.velouracinema.model.Booking;
 import com.velouracinema.model.Movie;
@@ -32,16 +33,16 @@ import javax.security.auth.Subject;
 public class EmailUtils {
 
     private static final String EMAIL_FROM = "velouracinema@gmail.com";
-//    private static final String EMAIL_TO = "mohdjohan123@gmail.com";
     private static final String APP_PASSWORD = "gykh pjgu dlap owuo";
 
     public static void sendEmailBookingConfirm(Booking booking, String recipientEmail) {
 
-        String subject = "Booking Confirmation for " +booking.getShowtime().getMovie().getTitle();
+        String subject = "Booking Confirmation for " +ShowtimeDAO.getShowtimeById(booking.getShowtimeId()).getMovie().getTitle();
 
 
-        String formattedDate = booking.getShowtime().getFormattedShowDate();
-        String formattedTime = booking.getShowtime().getFormattedShowTime();
+        String formattedDate = ShowtimeDAO.getShowtimeById(booking.getShowtimeId()).getFormattedShowDate();
+        String formattedTime = ShowtimeDAO.getShowtimeById(booking.getShowtimeId()).getFormattedShowTime();
+        
         String seatListString = booking.getSeats().stream()
                 .map(Seat::getSeatNumber)
                 .collect(Collectors.joining(", "));
@@ -89,18 +90,17 @@ public class EmailUtils {
     """.formatted(
                 booking.getId(),
             booking.getBookingDateFormatted(),
-                booking.getShowtime().getMovie().getTitle(),
+                ShowtimeDAO.getShowtimeById(booking.getShowtimeId()).getMovie().getTitle(),
                 formattedDate, // e.g. "Monday, 15 April 2024"
                 formattedTime, // e.g. "08:00 PM"
-                booking.getShowtime().getScreen(), // or "Hall 6"
+                ShowtimeDAO.getShowtimeById(booking.getShowtimeId()).getScreen(), // or "Hall A"
                 seatListString, // e.g. "A1, A2"
                 booking.getPayment().getAmount()
         );
 
-        if (booking.getPayment().equals("counter")) {
+        if (booking.getPayment().getPaymentMethod().equals("counter")) {
             htmlBody += "Please pay at the counter prior 3 hours before showtime to avoid cancellation.</p>";
         } else {
-
             htmlBody += "Please show this email at the entrance.</p>";
         }
 

@@ -16,10 +16,6 @@
         <servlet-class>com.velouracinema.controller.booking.BookingServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>testServlets</servlet-name>
-        <servlet-class>testServlets</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>PaymentServlet</servlet-name>
         <servlet-class>com.velouracinema.controller.payment.PaymentServlet</servlet-class>
     </servlet>
@@ -92,8 +88,8 @@
         <servlet-class>com.velouracinema.controller.support.SupportServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>EmailServlet</servlet-name>
-        <servlet-class>com.velouracinema.controller.EmailServlet</servlet-class>
+        <servlet-name>testServlets</servlet-name>
+        <servlet-class>testServlets</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>StaffDao</servlet-name>
@@ -102,10 +98,6 @@
     <servlet-mapping>
         <servlet-name>BookingServlet</servlet-name>
         <url-pattern>/booking</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>testServlets</servlet-name>
-        <url-pattern>/testServlets</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>PaymentServlet</servlet-name>
@@ -199,10 +191,6 @@
         <url-pattern>/submitSupport</url-pattern>
         <url-pattern>/deleteSupport</url-pattern>
         <url-pattern>/support</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>EmailServlet</servlet-name>
-        <url-pattern>/email</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

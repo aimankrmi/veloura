@@ -92,29 +92,7 @@ public class SeatDAO {
 
     }
     
-//    public static List<Seat> getSeats(int showtimeId) {
-//
-//        List<Seat> seats = new ArrayList();
-//
-//        String sql = "SELECT * FROM seats WHERE showtime_id = ?";
-//
-//        try (Connection conn = DBUtil.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
-//            stmt.setInt(1, showtimeId);
-//            while (rs.next()) {
-//                Seat seat = new Seat();
-//                seat.setSeatId(rs.getInt("id"));
-//                seat.setSeatNumber(rs.getString("seat_number"));
-//                seat.setShowtimeId(rs.getInt(showtimeId));
-//                seat.setIsAvailable(rs.getBoolean("is_available"));
-//                seats.add(seat);
-//            }
-//            conn.close();
-//        } catch (SQLException e) {
-//        }
-//
-//        return seats;
-//
-//    }
+
     public static boolean getStatusById(int seatId) {
 
         String sql = "SELECT is_available FROM seats WHERE id = ?";

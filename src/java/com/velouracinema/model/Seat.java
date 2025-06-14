@@ -55,20 +55,4 @@ public class Seat implements java.io.Serializable {
         this.isAvailable = isAvailable;
     }
 
-    public static Map<String, List<Seat>> getSeatRowByShowtime(int showtimeId) {
-
-        Map<String, List<Seat>> seatMap = new LinkedHashMap<>();
-
-        for (Seat seat : getSeatsByShowtimes(showtimeId)) {
-            String row = seat.getSeatNumber().substring(0, 1);
-            seatMap.computeIfAbsent(row, k -> new ArrayList<>()).add(seat);
-        }
-
-        return seatMap;
-
-    }
-//    public String getSeatStatus(Seat seat){
-//        
-//    }
-//    
 }
