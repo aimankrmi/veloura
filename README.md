@@ -74,7 +74,7 @@ Overall, the system bridges the gap between traditional cinema experiences and m
 ## 🛠️ How to Run the Project Locally
 
 1. **Clone the repository on Netbeans:**
-   ```bash
+   ```
  https://github.com/aimankrmi/veloura.git
    ```
 
