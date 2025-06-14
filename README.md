@@ -75,7 +75,7 @@ Overall, the system bridges the gap between traditional cinema experiences and m
 
 1. **Clone the repository on Netbeans:**
    ```
- https://github.com/aimankrmi/veloura.git
+    https://github.com/aimankrmi/veloura.git
    ```
 
 2. **Open the project in NetBeans.**
