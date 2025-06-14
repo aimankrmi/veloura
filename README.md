@@ -199,8 +199,7 @@ VelouraCinemaTicket/
 
 ## 🌐 Live Demo 
 
-> If deployed: [https://velouracinema-demo.vercel.app](https://velouracinema-demo.vercel.app)  
-> *(Replace with actual link if deployed)*
+> Deployed at: [https://velouracinema-demo.vercel.app](https://velouracinema-demo.vercel.app)  
 
 ---
 
