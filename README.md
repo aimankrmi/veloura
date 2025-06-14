@@ -94,7 +94,7 @@ Overall, the system bridges the gap between traditional cinema experiences and m
   
     Update the DBUtil.java file with your actual MySQL credentials:
    ```
-    - String url = mysql://localhost:3306/veloura
+    - String url = mysql://localhost:3306/cinema_db
     - String username=databaseuser
     - String password=yourpassword
    ```
