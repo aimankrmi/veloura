@@ -90,20 +90,19 @@ Overall, the system bridges the gap between traditional cinema experiences and m
 - [`activation.jar`](https://repo1.maven.org/maven2/javax/activation/activation/1.1/activation-1.1.jar)
 
 4. **Configure MySQL database:**
-   - Create a database: ``cinema_db``
-   - Run the SQL dump: filename.sql db/filename.sql to create tables and sample data.
+   - Run the SQL dump: veloura_db.sql (db/veloura_db.sql) to create database cinema_db tables and sample data.
   
     Update the DBUtil.java file with your actual MySQL credentials:
    ```
-    - jdbc.url=jdbc:mysql://localhost:3306/veloura
-    - jdbc.username=databaseuser
-    - jdbc.password=yourpassword
+    - String url = mysql://localhost:3306/veloura
+    - String username=databaseuser
+    - String password=yourpassword
    ```
       
 6. **Deploy & Run the project using Apache Tomcat**
      Open your browser and go to:
      ```
-      http://localhost:8080/Veloura
+      http://localhost:8080/veloura
      ```
 ---
 
@@ -119,32 +118,32 @@ VelouraCinemaTicket/
 │   │   └── web.xml
 │   │   ├── views/
 │   │   │   ├── admin/
-│   │   │       └── admin-dashboard.jsp, manage-member.jsp, manage-staff.jsp
+│   │   │   │   └── admin-dashboard.jsp, manage-member.jsp, manage-staff.jsp
 │   │   │   ├── booking/
-│   │   │       └── edit-booking.jsp, success-edit.jsp
+│   │   │   │   └── edit-booking.jsp, success-edit.jsp
 │   │   │   ├── member/
-│   │   │       └── booking-history.jsp, member-dashboard.jsp
+│   │   │   │   └── booking-history.jsp, member-dashboard.jsp
 │   │   │   ├── payment/
-│   │   │       └── payment.jsp, review-payment.jsp, seccuess-payment.jsp
+│   │   │   │   └── payment.jsp, review-payment.jsp, seccuess-payment.jsp
 │   │   │   ├── staff/
-│   │   │       └── manage-movies.jsp, staff-dashboard.jsp
+│   │   │   │   └── manage-movies.jsp, staff-dashboard.jsp, manage-support.jsp
 │   │   │   ├── user/
-│   │   │       └── login.jsp, register.jsp
+│   │   │   │   └── login.jsp, register.jsp, support.jsp
 │   │   │   ├── booking/
-│   │   │       └── booking.jsp
-│   │   │   ├── error/
+│   │   │   │   └── booking.jsp
+│   │   │   └── error/
 │   │   │       └── 409.jsp, error.jsp
+│   │   └── includes/
+│   │       └── footer.jsp, header.jsp, seat-legend.jsp, seat-row.jsp
 │   ├── assets/
 │   │   ├── css/
-│   │       └── booking.css, footer.css, header.css, movie.css, payment.css, styles.css
+│   │   │   └── booking.css, footer.css, header.css, movie.css, payment.css, styles.css
 │   │   ├── icon/
-│   │       └── 
+│   │   │   └── 
 │   │   ├── images/
-│   │       └──
-│   │   ├── js/
+│   │   │   └──
+│   │   └── js/
 │   │       └── booking.js, edit-booking.js, scripts.js
-│   ├── includes/
-│       └── footer.jsp, header.jsp, seat-legend.jsp, seat-row.jsp
 │   │     
 ├── Source Packages/
 │   ├── com.velouracinema.controller.booking/
@@ -152,6 +151,9 @@ VelouraCinemaTicket/
 │   │   
 │   ├── com.velouracinema.controller.home/
 │   │   └── HomeServlet.java
+│   │
+│   ├── com.velouracinema.controller.support/
+│   │   └── SupportServlet.java
 │   │   
 │   ├── com.velouracinema.controller.movie/
 │   │   └── ManageMovieServlet.java
@@ -172,19 +174,19 @@ VelouraCinemaTicket/
 │   │   └── PaymentDAO.java
 │   │   
 │   ├── com.velouracinema.dao.user/
-│   │   └── UserDAO.java
+│   │   └── UserDAO.java, SupportDAO.java
 │   │   
 │   ├── com.velouracinema.listener/
 │   │   └── BookingCleanupTaskListener.java
 │   │   
 │   ├── com.velouracinema.model/
-│   │   └── Booking.java, Movie.java, Payment.java, Seat.java, Showtime.java, SupportMessage.java, TopMovie.java, User.java
+│   │   └── Booking.java, Movie.java, Payment.java, Seat.java, Showtime.java, SupportMessage.java, TopMovie.java, User.java, SupportRequest.java
 │   │   
 │   ├── com.velouracinema.util/
-│   │   └── DBUtil.java, Utils.java
+│   │   └── DBUtil.java, Utils.java, EmailUtils.java
 │   │   
 ├── db/
-│   └── cinema_db.sql
+│   └── veloura_db.sql
 │   
 └── README.md
 ```
@@ -201,7 +203,7 @@ VelouraCinemaTicket/
 
 ## 🌐 Live Demo 
 
-> Deployed at: [https://velouracinema-demo.vercel.app](https://velouracinema-demo.vercel.app)  
+> Deployed at: [https://velouracinema-demo.vercel.app](https://velouracinema-demo.vercel.app)  (Not Available Yet)
 
 ---
 
