@@ -11,7 +11,6 @@ import com.velouracinema.model.TopMovie;
 import com.velouracinema.model.User;
 import com.velouracinema.util.Utils;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.ServletException;

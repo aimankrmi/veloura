@@ -24,13 +24,7 @@ public class SupportRequest {
     public SupportRequest() {
     }
 
-//    public SupportRequest(int id, String name, String email, String issueType, String message) {
-//        this.id = id;
-//        this.name = name;
-//        this.email = email;
-//        this.issueType = issueType;
-//        this.message = message;
-//    }
+
 
     // Getters and Setters
     public int getId() {

@@ -48,10 +48,6 @@ public class Booking implements java.io.Serializable {
         this.showtimeId = showtimeId;
     }
 
-//    public Showtime getShowtime() {
-//        return ShowtimeDAO.getShowtimeById(this.showtimeId);
-//    }
-
     public LocalDateTime getBookingDate() {
         return bookingDate;
     }
