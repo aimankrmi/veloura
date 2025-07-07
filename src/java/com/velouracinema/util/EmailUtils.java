@@ -32,8 +32,8 @@ import javax.security.auth.Subject;
  */
 public class EmailUtils {
 
-    private static final String EMAIL_FROM = "velouracinema@gmail.com";
-    private static final String APP_PASSWORD = "gykh pjgu dlap owuo";
+    private static final String EMAIL_FROM = "..."; 
+    private static final String APP_PASSWORD = "...";
 
     public static void sendEmailBookingConfirm(Booking booking, String recipientEmail) {
 
